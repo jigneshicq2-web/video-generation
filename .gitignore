@@ -1,0 +1,10 @@
+node_modules/
+out/stills/
+out/m.png
+out/contact_sheet.png
+out/video_silent.mp4
+audio/music.wav
+audio/sfx.wav
+audio/vo_track.wav
+models/
+__pycache__/
