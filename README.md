@@ -101,3 +101,9 @@ the contact sheet (`out/storyboard_contact_sheet.png`):
 - **Safe zones:** critical copy sits between about y 300 and y 1510 (clear of the Reels caption and CTA overlay) with side margins of at least 70 px.
 - **Not verified:** the VO voice and mix have not been checked by a human listener. Review them before
   publishing.
+
+## Static ad: "Your client's feed went quiet again." (4:5, 1080×1350)
+
+`src/ads/quiet-feed.html` is rendered to `out/RecurPost_Ad_QuietFeed_1080x1350.png` with `node src/ads/render-ad.js`
+(needs Playwright; run `npm install` first for the Inter fonts). It uses the supplied logo, `assets/brand/recurpost-logo-dark.webp`, unmodified.
+The CTA blue (`--brand: #2563EB`) is a placeholder. Swap in the official hex at the top of the HTML and re-render.

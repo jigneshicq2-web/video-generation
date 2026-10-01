@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Quiet Feed Ad</title>
+<style>
+  @font-face { font-family: Inter; font-weight: 500; src: url(../../node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 600; src: url(../../node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 700; src: url(../../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 800; src: url(../../node_modules/@fontsource/inter/files/inter-latin-800-normal.woff2); }
+
+  :root {
+    /* Placeholder: swap --brand for the official RecurPost brand blue hex. */
+    --brand: #2563EB;
+    --navy: #0F1B3D;
+    --ink2: #3B4560;
+    --bg: #F7F8FA;
+    --card: #FFFFFF;
+    --q-line: #E3E6EC;
+    --q-cell: #F1F2F5;
+    --q-dash: #C3C8D2;
+    --q-tile: #D9DCE2;
+    --coral: #FF6B5B;
+    --amber: #FFB547;
+    --sky: #8FB4FF;
+    --mint: #2BC48A;
+    --lav: #B9A7FF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; background: var(--bg); overflow: hidden; }
+  body { font-family: Inter, sans-serif; color: var(--navy); position: relative; -webkit-font-smoothing: antialiased; }
+
+  .headline {
+    position: absolute; left: 72px; top: 72px; width: 900px;
+    font-weight: 800; font-size: 80px; line-height: 1.04; letter-spacing: -0.035em;
+  }
+
+  /* ---------- split panel ---------- */
+  .split { position: absolute; left: 72px; right: 72px; top: 318px; height: 640px; display: flex; }
+  .half { flex: 1; position: relative; }
+  .divider { width: 2px; margin: 12px 28px; background: #DCE0E7; border-radius: 2px; }
+
+  .cal {
+    position: absolute; left: 0; top: 52px; width: 404px; height: 430px;
+    background: var(--card); border-radius: 22px; padding: 22px 20px;
+    box-shadow: 0 1px 2px rgba(15,27,61,.05), 0 10px 28px rgba(15,27,61,.07);
+  }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; height: 22px; margin-bottom: 18px; }
+  .bar { height: 12px; border-radius: 6px; }
+  .arrows { display: flex; gap: 8px; }
+  .arrows i { width: 20px; height: 20px; border-radius: 6px; display: block; }
+  .dow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 12px; }
+  .dow i { height: 6px; border-radius: 3px; display: block; margin: 0 12px; }
+  .grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 58px; gap: 8px; }
+  .cell { border-radius: 10px; position: relative; overflow: hidden; }
+
+  /* quiet */
+  .quiet .cal { box-shadow: 0 1px 2px rgba(15,27,61,.04), 0 6px 18px rgba(15,27,61,.04); }
+  .quiet .bar, .quiet .arrows i, .quiet .dow i { background: var(--q-line); }
+  .quiet .cell { background: var(--q-cell); }
+  .quiet .cell.slot { background: transparent; border: 2px dashed var(--q-dash); }
+  .quiet .cell.off { background: #F7F8FA; }
+
+  /* full */
+  .full .bar { background: var(--navy); opacity: .85; }
+  .full .arrows i { background: #E8EEFD; }
+  .full .dow i { background: #DCE3F2; }
+  .full .cell { background: #F3F5FA; }
+
+  /* ---------- phone ---------- */
+  .phone {
+    position: absolute; right: 0; bottom: 0; width: 200px; height: 404px;
+    border-radius: 34px; padding: 10px; background: var(--navy);
+    box-shadow: 0 14px 30px rgba(15,27,61,.18);
+  }
+  .screen { width: 100%; height: 100%; border-radius: 25px; background: #fff; overflow: hidden; padding: 30px 12px 12px; position: relative; }
+  .notch { position: absolute; top: 9px; left: 50%; width: 54px; height: 12px; margin-left: -27px; border-radius: 6px; background: var(--navy); }
+  .prof { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; flex: none; }
+  .stats { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .stats i { display: block; height: 14px; border-radius: 4px; }
+  .bio i { display: block; height: 6px; border-radius: 3px; margin-bottom: 5px; }
+  .tabs { display: flex; justify-content: space-around; padding: 8px 0 8px; margin: 6px 0 8px; border-top: 1px solid; }
+  .tabs i { width: 14px; height: 14px; border-radius: 3px; display: block; }
+  .ig { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .ig .t { aspect-ratio: 1; border-radius: 3px; position: relative; overflow: hidden; }
+
+  .quiet .phone { background: #9EA5B4; box-shadow: 0 10px 24px rgba(15,27,61,.10); }
+  .quiet .notch { background: #9EA5B4; }
+  .quiet .screen { background: #FAFAFB; }
+  .quiet .avatar { background: var(--q-tile); }
+  .quiet .stats i, .quiet .bio i, .quiet .tabs i { background: #E6E8ED; }
+  .quiet .tabs { border-color: #ECEEF2; }
+  .quiet .ig .t { background: #F1F2F5; }
+  .quiet .ig .t.on { background: #D2D6DE; }
+
+  .full .avatar { background: conic-gradient(var(--coral), var(--amber), var(--brand), var(--coral)); padding: 3px; }
+  .full .avatar b { display: block; width: 100%; height: 100%; border-radius: 50%; background: var(--navy); border: 2px solid #fff; }
+  .full .stats i { background: #CBD3E6; }
+  .full .bio i { background: #E1E6F1; }
+  .full .tabs { border-color: #E8ECF4; }
+  .full .tabs i { background: var(--navy); opacity: .7; }
+
+  /* ---------- badges ---------- */
+  .badge-q {
+    position: absolute; left: 0; top: 0; height: 36px; padding: 0 16px 0 12px;
+    display: flex; align-items: center; gap: 9px; border-radius: 18px;
+    background: #ECEEF2; color: #8A91A2; font-weight: 600; font-size: 17px; letter-spacing: -0.005em;
+  }
+  .badge-q .dot { width: 9px; height: 9px; border-radius: 50%; background: #B4BAC6; }
+  .badge-ok {
+    position: absolute; left: 0; top: -2px; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--mint); display: grid; place-items: center;
+    box-shadow: 0 4px 12px rgba(43,196,138,.35);
+  }
+
+  /* ---------- copy + footer ---------- */
+  .sub {
+    position: absolute; left: 72px; top: 1004px; width: 880px; text-wrap: balance;
+    font-weight: 500; font-size: 38px; line-height: 1.28; letter-spacing: -0.015em; color: var(--ink2);
+  }
+  .footer { position: absolute; left: 72px; right: 72px; bottom: 72px; height: 104px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { height: 38px; width: auto; display: block; }
+  .cta {
+    height: 104px; padding: 0 44px; border-radius: 22px; background: var(--brand); color: #fff;
+    display: flex; align-items: center; font-weight: 700; font-size: 32px; letter-spacing: -0.01em;
+    box-shadow: 0 8px 20px rgba(37,99,235,.25);
+  }
+</style>
+</head>
+<body>
+  <h1 class="headline">Your client's feed went quiet again.</h1>
+
+  <div class="split">
+    <div class="half quiet" id="quiet">
+      <div class="badge-q"><span class="dot"></span>0 posts scheduled</div>
+    </div>
+    <div class="divider"></div>
+    <div class="half full" id="full">
+      <div class="badge-ok">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <p class="sub">Schedule a month of posts for every client in one afternoon.</p>
+
+  <div class="footer">
+    <img class="logo" src="../../assets/brand/recurpost-logo-dark.webp" alt="">
+    <div class="cta">Start your 14-day free trial</div>
+  </div>
+
+<script>
+  // Abstract post thumbnails: shapes and colour blocks only, no text.
+  const C = { navy: '#0F1B3D', brand: getComputedStyle(document.documentElement).getPropertyValue('--brand').trim(),
+              coral: '#FF6B5B', amber: '#FFB547', sky: '#8FB4FF', lav: '#B9A7FF', cream: '#FFF1DC', ice: '#E6EEFF', blush: '#FFE3DE' };
+  const thumbs = [
+    [C.brand, `<i style="position:absolute;width:56%;height:56%;left:22%;top:22%;border-radius:50%;background:${C.amber}"></i>`],
+    [C.cream, `<i style="position:absolute;left:0;right:0;bottom:0;height:42%;background:${C.coral}"></i><i style="position:absolute;width:30%;height:30%;right:14%;top:14%;border-radius:50%;background:${C.amber}"></i>`],
+    [C.navy, `<i style="position:absolute;left:18%;top:20%;width:64%;height:12%;border-radius:4px;background:#fff;opacity:.9"></i><i style="position:absolute;left:18%;top:42%;width:40%;height:12%;border-radius:4px;background:${C.amber}"></i>`],
+    [C.coral, `<i style="position:absolute;left:20%;bottom:0;width:0;height:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:44px solid ${C.cream}"></i>`],
+    [C.ice, `<i style="position:absolute;left:16%;top:16%;width:68%;height:68%;border-radius:10px;background:${C.brand}"></i><i style="position:absolute;right:16%;bottom:16%;width:34%;height:34%;border-radius:50%;background:${C.coral}"></i>`],
+    [C.amber, `<i style="position:absolute;left:-10%;top:30%;width:120%;height:18%;background:${C.navy};transform:rotate(-18deg)"></i>`],
+    [C.lav, `<i style="position:absolute;width:44%;height:44%;left:12%;top:12%;border-radius:50%;background:#fff;opacity:.85"></i><i style="position:absolute;width:44%;height:44%;right:12%;bottom:12%;border-radius:8px;background:${C.navy}"></i>`],
+    [C.blush, `<i style="position:absolute;left:50%;top:50%;height:60%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:${C.coral}"></i><i style="position:absolute;left:50%;top:50%;height:24%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:${C.amber}"></i>`],
+    [C.sky, `<i style="position:absolute;left:0;right:0;bottom:0;height:50%;background:${C.brand}"></i><i style="position:absolute;width:26%;height:26%;left:18%;top:16%;border-radius:50%;background:#fff"></i>`],
+  ];
+
+  function calendar(kind) {
+    // 5 weeks; first two cells and last three are outside the month.
+    const quietSlots = new Set([9, 17, 24]);
+    const fullEmpty = new Set([6, 13, 27]);
+    let cells = '';
+    for (let i = 0; i < 35; i++) {
+      const off = i < 2 || i > 31;
+      if (kind === 'quiet') {
+        cells += `<div class="cell ${off ? 'off' : quietSlots.has(i) ? 'slot' : ''}"></div>`;
+      } else if (off || fullEmpty.has(i)) {
+        cells += `<div class="cell"></div>`;
+      } else {
+        const [bg, inner] = thumbs[(i * 5) % thumbs.length];
+        cells += `<div class="cell" style="background:${bg}">${inner}</div>`;
+      }
+    }
+    const dow = '<i></i>'.repeat(7);
+    return `<div class="cal">
+      <div class="cal-head"><span class="bar" style="width:130px"></span><span class="arrows"><i></i><i></i></span></div>
+      <div class="dow">${dow}</div><div class="grid">${cells}</div></div>`;
+  }
+
+  function phone(kind) {
+    let tiles = '';
+    for (let i = 0; i < 12; i++) {
+      if (kind === 'quiet') tiles += `<div class="t ${i < 3 && i !== 1 || i === 3 ? 'on' : ''}"></div>`;
+      else {
+        const [bg, inner] = thumbs[(i * 4 + 2) % thumbs.length];
+        tiles += `<div class="t" style="background:${bg}"><div style="position:absolute;inset:0;transform:scale(.62);transform-origin:0 0;width:161%;height:161%">${inner}</div></div>`;
+      }
+    }
+    const avatar = kind === 'full' ? '<div class="avatar"><b></b></div>' : '<div class="avatar"></div>';
+    return `<div class="phone"><div class="screen"><span class="notch"></span>
+      <div class="prof">${avatar}<div class="stats"><i></i><i></i><i></i></div></div>
+      <div class="bio"><i style="width:70%"></i><i style="width:48%"></i></div>
+      <div class="tabs"><i></i><i></i><i></i></div>
+      <div class="ig">${tiles}</div></div></div>`;
+  }
+
+  for (const k of ['quiet', 'full']) document.getElementById(k).insertAdjacentHTML('beforeend', calendar(k) + phone(k));
+</script>
+</body>
+</html>
