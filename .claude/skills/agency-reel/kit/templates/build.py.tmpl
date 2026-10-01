@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""CLIENT vs AGENCY: __TITLE__. Fill in: length (short <=20s / long 45-75s), track (A verified-behaviour /
+B pure-pain), the device Kate and Rex are looking at, the joke, and the end card's proof.
+Safe box for anything readable: x 110..940, y 230..1480 (same 1080x1920 canvas as every reel in the series)."""
+import os, sys
+ROOT = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, ROOT)
+from reel_kit import Reel, base_css, safe_html, inner_box, rig_point, kate, CW, CH, INK, CREAM, YEL, TEAL, RED, GRN
+from parts import rex, room, chair, side_table, tag, SCR, KATE, REX
+
+OUT = os.path.join(ROOT, 'compositions', 'frames'); os.makedirs(OUT, exist_ok=True)
+
+# ---------------------------------------------------------------- timing (generic — reel_kit.Reel)
+ORDER = ['k1', 'r1', 'k2', 'r2']  # TODO: your line ids, matching lines.txt / assets/voice/voice.json
+reel = Reel(ROOT, ORDER, end_card_order=('e1',))   # multi-line card: end_card_order=('e1', 'e2', ...)
+VO, L, EV, END_CARD, TOTAL, E1_SPEECH_END = reel.VO, reel.L, reel.EV, reel.END_CARD, reel.TOTAL, reel.E1_SPEECH_END
+E, W, EW = reel.E, reel.W, reel.EW
+
+# ======================================================================================================
+# 1) DEVICE / SCREEN HTML — whatever Kate and Rex are looking at (wall screen, phone, laptop, form...).
+#    inner_box(SCR) gives the screen's content-box origin (world px) if you place chips/highlights on it.
+def screen_html():
+    return '''<div class="dev">TODO device content</div>'''
+
+# ======================================================================================================
+# 2) EXTRA CSS — this reel's own device/prop classes. base_css() already ships the shared chrome: camera,
+#    grain/vignette, title pill + subtitle, bezel/glare, name tags, captions, end-card background,
+#    headline + swoosh, stamp, url, corner cards, and the safe overlay.
+EXTRA_CSS = f'''
+.dev{{position:absolute;inset:14px}}
+'''
+CSS = base_css(extra=EXTRA_CSS)
+
+# ======================================================================================================
+BODY = f'''
+<div id="cam">
+ {room(screen_html())}
+ {chair()}
+ <div class="abs" id="rw" style="left:0;top:0;width:0;height:0;z-index:6">{rex('rx', REX['left'], REX['top'], REX['h'], z=6)}</div>
+ {side_table()}
+ <div class="abs" id="kw" style="left:0;top:0;width:0;height:0;z-index:6">{kate('kt', KATE['left'], KATE['top'], KATE['h'], z=6)}</div>
+ {tag('tag-r', 'REX · TODO ROLE', 'left', 118, 'r')}
+ {tag('tag-k', 'KATE · AGENCY OWNER', 'right', 146, 'k')}
+ <div class="abs" id="fxw" style="left:0;top:0;width:1080px;height:1920px;z-index:60;pointer-events:none"></div>
+</div>
+<div class="fibers"></div>
+<div class="ttl" id="ttl">Client vs Agency 😅</div>
+<div class="sub" id="sub">TODO SUBTITLE</div>
+{reel.caps_html()}
+<div class="end" id="end" data-layout-allow-overflow>
+ <div class="hl" id="hl">TODO headline<br>the <span class="sw">payoff.<svg class="swoosh" viewBox="0 0 300 30" preserveAspectRatio="none"><path id="swp" d="M4 20 Q 120 6 296 14" stroke="{YEL}" stroke-width="16" fill="none" stroke-linecap="round"/></svg></span></div>
+ <!-- TODO: your end-card widget(s) — an on-hold phone, a scheduled->published stack, a form, a feed... -->
+ <div class="stamp" id="stamp" data-layout-allow-overlap><img src="assets/brand/logo-mono.png" alt="RecurPost" /><b>✓</b></div>
+ <div class="url" id="url">recurpost.com</div>
+ <div class="ccard" id="kcc" style="left:120px;top:1285px;background:#FFF3C4"><div class="ccin" data-layout-allow-overflow>{kate('kc', -40, 13, 520, z=2)}</div></div>
+ <div class="ccard" id="rpc" style="left:760px;top:1285px;background:#DDF3EE"><div class="ccin" id="rpw" data-layout-allow-overflow>{rex('rp', -40, 13, 520, z=2, face_dx=-14)}</div></div>
+ <div class="abs" id="fxe" style="left:0;top:0;width:1080px;height:1920px;z-index:9;pointer-events:none"></div>
+</div>
+<div class="grain"></div><div class="vig"></div>
+{safe_html()}
+'''
+
+# ======================================================================================================
+# 3) CHOREOGRAPHY — your beats. reel.camto/.home/.shot_two/.pop_/.speak write into reel.js; reel.A appends
+#    raw JS (any of the LIB helpers: shake, burst, fly, typeSeq, countUp, ripple, swoosh, ...). Look at
+#    agency-reel-finance/build_kit.py for the full worked pattern (k1/r1/k2/... beats, a buzz/stare loop,
+#    camera pushes timed off word onsets via reel.W(n, 'word')).
+reel.rig_setup()
+reel.camto(1.08, 525, 1000, 525, 1000, 0, 0); reel.home(0.02, 0.9, 'power2.out')
+
+# TODO: for each id in ORDER, pose Kate/Rex (K.pose/R.pose), move the camera, then reel.speak('K'|'R', n, rest_mouth)
+
+reel.idle_life(blinks=[1.2, 3.3, 5.4])
+reel.name_tags(fade_at=L[ORDER[1]] - 0.1)
+reel.caption_choreography()
+reel.title_chrome(out_at=L[ORDER[1]] - 0.1)
+reel.hide_cam()
+
+# ======================================================================================================
+# 4) END CARD — headline, your widget(s), stamp, url, the hold beat (Kate/Rex corner cards).
+EC = END_CARD
+T_ST, T_KP = EW('e1', 0), EW('e1', 1)     # TODO: word indices in the e1 line that land the stamp / payoff
+T_HOLD = round(E1_SPEECH_END + 0.05, 3)
+reel.A("gsap.set('#end',{opacity:0}); gsap.set(['#hl','#stamp','#url','#kcc','#rpc'],{opacity:0});")
+reel.end_card_slide_in()
+reel.headline_in(swoosh_sel='#swp')
+# TODO: your widget's own timeline entries — reel.A(f"tl.fromTo(...)...")
+reel.stamp_slam(T_ST, shake_sel='#end')
+reel.url_rise(E1_SPEECH_END - 0.15)
+reel.corner_card_kate(T_HOLD)   # pass pose=/face=/extra_props= for a held prop
+reel.corner_card_rex(T_HOLD)
+
+main = reel.write_main(OUT, BODY, CSS)
+
+# ======================================================================================================
+# 5) SFX — (name, at, volume) triples; sdur gives each named sound's clip length in seconds.
+SFX = [('pop', 0.3, 0.25), ('whoosh', EC, 0.45), ('thunk', T_ST, 0.6)]  # TODO
+sdur = {'click': 0.035, 'pop': 0.14, 'thunk': 0.3, 'whoosh': 0.38, 'tick': 0.05, 'slide': 0.5, 'boing': 0.35,
+        'ping': 0.55, 'chime': 0.9, 'chime_warm': 1.5, 'swish': 0.3, 'ring': 0.9, 'buzz': 0.6}
+clips = [reel.scene_clip()] + reel.vo_clips() + reel.sfx_clips(SFX, sdur)
+clips.append(reel.music_clip('room', 'assets/music/room.wav', 0, END_CARD, 14, 1))
+clips.append(reel.music_clip('sting', 'assets/music/sting.wav', END_CARD, min(4.2, round(TOTAL - END_CARD, 2)), 15, 0.3))
+reel.write_index(ROOT, clips)
+
+beats = dict(open=0.8, ec=EC + 1.0, stamp=T_ST + 0.35, end=T_HOLD + 0.9)  # TODO: one entry per beat, for review
+reel.write_timing(ROOT, beats)

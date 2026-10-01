@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+"""Cover + thumbnail for __TITLE__. Headline teases the setup, never the punchline. No episode number.
+Writes cover.html (1080x1920) + thumb.html (1280x720) and screenshots both with headless Chrome."""
+import os, sys, subprocess
+HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); sys.path.insert(0, ROOT)
+from parts import rex, INK, YEL
+
+def posed(s, P, rot):
+    for k, a in rot.items():
+        o = '150 268' if k.startswith('fore') else ('150 160' if k == 'head' else '150 195')
+        s = s.replace(f'<g id="{P}-k-{k}">', f'<g id="{P}-k-{k}" transform="rotate({a} {o})">')
+    return s
+
+def posed_rex(P, left, top, h, pose):
+    """pose: e.g. dict(armR=-78, foreR=-58, armL=30, foreL=20, head=-6) — a breezy wave, a shrug, ..."""
+    return posed(rex(P, left, top, h, z=3, face_dx=12), P, pose)
+
+BASE = f'''
+@font-face{{font-family:Brico;font-weight:800;src:url(BricolageGrotesque-800.woff2)}}
+@font-face{{font-family:Manrope;font-weight:200 800;src:url(Manrope-latin.woff2)}}
+*{{margin:0;box-sizing:border-box}}
+body{{overflow:hidden;position:relative;font-family:Manrope;background:radial-gradient(ellipse at 50% 36%,#343A60 0%,#232740 55%,#161927 100%)}}
+.grain{{position:absolute;inset:0;opacity:.07;background-image:radial-gradient(#FFFBF4 .6px,transparent .7px);background-size:6px 6px;z-index:20;mix-blend-mode:overlay}}
+.vig{{position:absolute;inset:0;z-index:21;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 55%,rgba(6,4,18,.3) 88%,rgba(6,4,18,.5) 100%)}}
+.pill{{position:absolute;background:{YEL};color:{INK};font:800 40px/1 Brico;padding:14px 24px;border-radius:14px;letter-spacing:.02em;z-index:10;border:4px solid {INK}}}
+h1{{position:absolute;font:800 128px/0.98 Brico;letter-spacing:-.035em;color:#fff;z-index:10}}
+h1 .y{{color:{YEL}}}
+.tile{{position:absolute;border:10px solid #0E1020;border-radius:46px;overflow:hidden;background:#F4EDE0;box-shadow:0 22px 0 rgba(0,0,0,.35);z-index:5}}
+'''
+
+# TODO: replace tile_inner with whatever proves the premise (an invoice, a form, a chat thread, ...),
+# and pick Rex's pose. This is deliberately the same structure as agency-reel-finance/thumb/make_covers.py.
+def tile_inner(P):
+    return f'''{posed_rex(P, -160, 250, 1450, dict(armR=-78, foreR=-58, armL=30, foreL=20, head=-6))}
+ <!-- TODO: your proof-tile content -->'''
+
+cover = f'''<!doctype html><html><head><meta charset="utf-8"><style>{BASE}
+body{{width:1080px;height:1920px}}
+</style></head><body>
+<div class="pill" style="left:50%;transform:translateX(-50%);top:262px">CLIENT vs AGENCY</div>
+<h1 style="left:0;right:0;text-align:center;top:356px">TODO<br><span class="y">headline.</span></h1>
+<div class="tile" style="left:110px;top:680px;width:860px;height:960px">{tile_inner('cv')}</div>
+<div class="grain"></div><div class="vig"></div></body></html>'''
+thumb = f'''<!doctype html><html><head><meta charset="utf-8"><style>{BASE}
+body{{width:1280px;height:720px}}
+h1{{font-size:118px}} .pill{{font-size:30px;padding:10px 18px}}
+</style></head><body>
+<div class="tile" style="left:44px;top:40px;width:560px;height:640px;border-width:8px;border-radius:34px"><div style="position:absolute;left:0;top:0;transform:scale(.66);transform-origin:0 0;width:860px;height:970px">{tile_inner('th')}</div></div>
+<div class="pill" style="left:670px;top:150px">CLIENT vs AGENCY</div>
+<h1 style="left:670px;top:240px">TODO<br><span class="y">headline.</span></h1>
+<div class="grain"></div><div class="vig"></div></body></html>'''
+open(os.path.join(HERE, 'cover.html'), 'w').write(cover)
+open(os.path.join(HERE, 'thumb.html'), 'w').write(thumb)
+CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+for name, w, h in (('cover', 1080, 1920), ('thumb', 1280, 720)):
+    out = os.path.join(HERE, f'__SLUG__-{name}.png')
+    subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--hide-scrollbars', f'--window-size={w},{h}', '--force-device-scale-factor=1',
+                    '--virtual-time-budget=3000', f'--screenshot={out}', 'file://' + os.path.join(HERE, f'{name}.html')], check=True, capture_output=True)
+    print(out)
