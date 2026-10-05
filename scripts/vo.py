@@ -11,7 +11,7 @@ from kokoro_onnx import Kokoro
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_DIR = os.environ.get("KOKORO_DIR", ROOT + "/models")
 VOICE = os.environ.get("VO_VOICE", "am_fenrir")
-SPEED = float(os.environ.get("VO_SPEED", "1.12"))
+SPEED = float(os.environ.get("VO_SPEED", "1.0"))
 
 # Exact script. The TTS spelling of the brand is fixed so it is always
 # pronounced the same way ("ree-KUR-post"); on-screen text is unaffected.
@@ -31,7 +31,7 @@ LINES = [
 ]
 TTS_SPELLING = {"RecurPost": "Recur-Post"}
 # Slightly tighter read for the two closing lines so they land before 00:28.
-SPEED_OVERRIDES = {10: 1.2, 11: 1.2}
+SPEED_OVERRIDES = {10: 1.05, 11: 1.05}
 
 
 def trim(x, sr, thresh=0.012, pad=0.03):

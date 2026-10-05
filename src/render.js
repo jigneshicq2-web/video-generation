@@ -1,6 +1,6 @@
 // Frame renderer. Usage:
-//   node src/render.js video [out.mp4]         full 30 s, 1080x1920 @ 30 fps (silent)
-//   node src/render.js stills 0.5,2.8,...      PNG stills to out/stills/
+//   node src/render.js video [out.mp4]         full 40 s, 1080x1920 @ 30 fps (silent)
+//   node src/render.js stills 0.5,2.8,...      PNG stills to out/stills/ (real seconds)
 //   node src/render.js sheet                   contact sheet (1 frame / 0.5 s) for QA
 const fs = require('fs');
 const path = require('path');
@@ -30,7 +30,8 @@ const canvas = createCanvas(W, H);
 const ctx = canvas.getContext('2d');
 
 function renderFrame(frame) {
-  const t = frame / FPS;
+  // scenes are authored in storyboard seconds; the spot plays SCALE x slower
+  const t = frame / FPS / TL.SCALE;
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalAlpha = 1;

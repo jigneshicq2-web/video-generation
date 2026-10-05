@@ -3,6 +3,7 @@ const L = require('../lib');
 const C = require('./common');
 const { B, W, H, rr, card, text, ui, disp, hexA, ep, E, prog, lerp, clamp, flowLine, sampleCurve, chipRow } = L;
 const { fitFont } = require('./s01_s02');
+const { SLAM } = require('../timeline'); // "ONE WORKFLOW." beat
 
 // ---------------- Scene 09: ANALYTICS → CLIENT REPORT ----------------
 const METRICS = [
@@ -217,8 +218,9 @@ function heroInterface(ctx, x, y, w, h, t) {
   card(ctx, x, y, w, h, { r: 30, stroke: hexA(B.secondary, 0.5), shadowBlur: 80 });
   // sidebar
   ctx.save(); rr(ctx, x + 16, y + 16, 70, h - 32, 18); ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.fill(); ctx.restore();
-  for (let i = 0; i < 5; i++) { ctx.save(); ctx.fillStyle = i === 0 ? B.primary : 'rgba(255,255,255,0.14)'; rr(ctx, x + 35, y + 40 + i * 52, 32, 32, 9); ctx.fill(); ctx.restore(); }
-  C.logo(ctx, x + 96 + (w - 110) / 2, y + 56, 46);
+  for (let i = 1; i < 5; i++) { ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.14)'; rr(ctx, x + 35, y + 40 + i * 52, 32, 32, 9); ctx.fill(); ctx.restore(); }
+  C.icon(ctx, x + 51, y + 56, 40);
+  C.logo(ctx, x + 96 + (w - 110) / 2, y + 56, 46, { maxW: w - 140 });
   // mini calendar + chart
   const gx = x + 108, gy = y + 100, gw = w - 130;
   for (let r = 0; r < 2; r++) for (let c = 0; c < 5; c++) {
@@ -233,7 +235,7 @@ function heroInterface(ctx, x, y, w, h, t) {
 function scene10(ctx, t) {
   L.background(ctx, t, { gridShift: 800 + t * 30, glows: [[B.primary, W / 2, ORB.cy, 900, 0.3], [B.secondary, W / 2, ORB.cy + 200, 600, 0.12]] });
   const pull = ep(t, 26.0, 26.45, E.outExpo);              // camera pulls back
-  const bump = Math.sin(clamp(prog(t, 26.5, 26.75)) * Math.PI) * 0.035;
+  const bump = Math.sin(clamp(prog(t, SLAM, SLAM + 0.25)) * Math.PI) * 0.035;
   const conv = ep(t, 27.35, 27.95, E.inOutCubic);         // pillars converge
   ctx.save();
   L.camera(ctx, { s: lerp(1.9, 1, pull) + bump, fx: W / 2, fy: ORB.cy });
@@ -292,7 +294,7 @@ function scene10(ctx, t) {
     const rg = ctx.createRadialGradient(0, 0, 0, 0, 0, 420);
     rg.addColorStop(0, hexA(B.primary, 0.45 * conv)); rg.addColorStop(1, hexA(B.primary, 0));
     ctx.fillStyle = rg; ctx.fillRect(-500, -500, 1000, 1000);
-    C.logo(ctx, 0, 0, 120, { alpha: conv, glow: 50 });
+    C.logo(ctx, 0, 0, 120, { alpha: conv, glow: 50, maxW: 860 });
     ctx.restore();
     text(ctx, 'YOUR SOCIAL MEDIA.', W / 2, ORB.cy + 150, { font: disp(800, 56), alpha: ep(t, 27.45, 27.7) });
     text(ctx, 'SIMPLIFIED.', W / 2, ORB.cy + 218, { font: disp(800, 56), color: B.secondary, alpha: ep(t, 27.55, 27.8) });
@@ -303,9 +305,9 @@ function scene10(ctx, t) {
   ctx.save(); ctx.translate(W / 2, 330);
   text(ctx, 'EVERYTHING SOCIAL.', 0, 0, { font: disp(800, fitFont(ctx, 'EVERYTHING SOCIAL.', 800, 96, 900, 6)), track: lerp(6, 0, es), alpha: es });
   ctx.restore();
-  C.slam(ctx, 'ONE WORKFLOW.', W / 2, 442, t, 26.5, { font: disp(800, 104), color: B.secondary, glow: hexA(B.secondary, 0.7), from: 2.0, dur: 0.16 });
-  const fl = 1 - prog(t, 26.5, 26.8);
-  if (t >= 26.5 && fl > 0) { ctx.save(); ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.3 * fl; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+  C.slam(ctx, 'ONE WORKFLOW.', W / 2, 442, t, SLAM, { font: disp(800, 104), color: B.secondary, glow: hexA(B.secondary, 0.7), from: 2.0, dur: 0.16 });
+  const fl = 1 - prog(t, SLAM, SLAM + 0.3);
+  if (t >= SLAM && fl > 0) { ctx.save(); ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.3 * fl; ctx.fillRect(0, 0, W, H); ctx.restore(); }
 }
 
 // ---------------- Scene 11: BRAND CLOSE ----------------
@@ -318,7 +320,7 @@ function scene11(ctx, t) {
   flowLine(ctx, arc, 0, ep(t, 28.0, 28.6, E.inOutCubic), { lw: 5, glow: 22, alpha: 0.55, head: false, gx0: 0, gx1: W, gy0: 0, gy1: 0 });
 
   const settle = ep(t, 28.0, 28.4, E.inOutCubic);
-  C.logo(ctx, W / 2, lerp(ORB.cy, FINAL.logoY, settle), lerp(120, 132, settle), { glow: 30 });
+  C.logo(ctx, W / 2, lerp(ORB.cy, FINAL.logoY, settle), lerp(120, 132, settle), { glow: 30, maxW: lerp(860, 900, settle) });
 
   // hand-over line from Scene 10 leaves…
   const out = ep(t, 28.1, 28.35, E.inCubic);

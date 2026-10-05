@@ -304,7 +304,7 @@ function scene2(ctx, t) {
     ctx.translate(RING.cx, RING.cy); ctx.scale(lerp(0.6, 1, lg), lerp(0.6, 1, lg)); ctx.translate(-RING.cx, -RING.cy);
     const mp = ep(t, 2.95, 3.2);
     text(ctx, 'MEET', RING.cx, RING.cy - 96, { font: ui(700, 28), color: B.muted, track: 10, alpha: mp * (1 - ep(t, 4.0, 4.3)) });
-    C.logo(ctx, RING.cx, RING.cy, 104, { alpha: clamp(lg * 2), glow: 40 });
+    C.logo(ctx, RING.cx, RING.cy, 104, { alpha: clamp(lg * 2), glow: 40, maxW: 540 });
     ctx.restore();
   }
   ctx.restore();

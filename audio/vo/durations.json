@@ -1,65 +1,65 @@
 {
   "voice": "am_fenrir",
-  "speed": 1.12,
+  "speed": 1.0,
   "lines": {
     "0": {
       "text": "Still managing social media like this?",
-      "dur": 2.01,
+      "dur": 2.243,
       "sr": 24000
     },
     "1": {
       "text": "Meet RecurPost.",
-      "dur": 0.968,
+      "dur": 1.04,
       "sr": 24000
     },
     "2": {
       "text": "Your social media workflow, in one place.",
-      "dur": 2.14,
+      "dur": 2.324,
       "sr": 24000
     },
     "3": {
       "text": "Create smarter with AI.",
-      "dur": 1.241,
+      "dur": 1.344,
       "sr": 24000
     },
     "4": {
       "text": "Schedule across accounts.",
-      "dur": 1.256,
+      "dur": 1.342,
       "sr": 24000
     },
     "5": {
       "text": "And keep your best content working.",
-      "dur": 1.547,
+      "dur": 1.603,
       "sr": 24000
     },
     "6": {
       "text": "Get approvals without the back-and-forth.",
-      "dur": 1.719,
+      "dur": 1.846,
       "sr": 24000
     },
     "7": {
       "text": "And when something goes wrong, know exactly what to fix.",
-      "dur": 2.679,
+      "dur": 2.864,
       "sr": 24000
     },
     "8": {
       "text": "Manage conversations from one inbox.",
-      "dur": 1.852,
+      "dur": 2.119,
       "sr": 24000
     },
     "9": {
       "text": "Turn performance into client-ready reports.",
-      "dur": 2.17,
+      "dur": 2.341,
       "sr": 24000
     },
     "10": {
       "text": "One workflow.",
-      "dur": 0.74,
+      "dur": 0.804,
       "sr": 24000
     },
     "11": {
       "text": "All in RecurPost.",
-      "dur": 0.924,
+      "dur": 1.024,
       "sr": 24000
     }
   }

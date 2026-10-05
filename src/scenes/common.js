@@ -3,25 +3,37 @@ const L = require('../lib');
 const { B, rr, card, text, ui, disp, hexA, platformTile, checkMark } = L;
 
 let logoImg = null;
+let iconImg = null;
 async function preloadLogo() {
-  if (B.logoFile) {
-    const { loadImage } = require('@napi-rs/canvas');
-    logoImg = await loadImage(B.logoFile);
-  }
+  const { loadImage } = require('@napi-rs/canvas');
+  if (B.logoFile) logoImg = await loadImage(B.logoFile);
+  if (B.iconFile) iconImg = await loadImage(B.iconFile);
 }
 
-// Logo lockup centred at (cx, cy) with the given height. Official artwork is
-// contain-fitted at native proportions; fallback is a neutral wordmark.
+// Logo lockup centred at (cx, cy). `h` is the target height; `maxW` caps the
+// width (the official lockup is ~8:1), shrinking height to match so the logo
+// is always contain-fitted at native proportions, never stretched.
 function logo(ctx, cx, cy, h, o = {}) {
   ctx.save();
   if (o.alpha != null) ctx.globalAlpha *= o.alpha;
-  if (o.glow) { ctx.shadowColor = hexA(B.primary, 0.9); ctx.shadowBlur = o.glow; }
+  if (o.glow) { ctx.shadowColor = 'rgba(255,205,69,0.35)'; ctx.shadowBlur = o.glow; }
   if (logoImg) {
-    const w = (logoImg.width / logoImg.height) * h;
+    const ar = logoImg.width / logoImg.height;
+    let w = ar * h;
+    if (o.maxW && w > o.maxW) { w = o.maxW; h = w / ar; }
     ctx.drawImage(logoImg, cx - w / 2, cy - h / 2, w, h);
   } else {
     text(ctx, B.name, cx, cy + h * 0.04, { font: disp(800, Math.round(h * 0.9)), color: '#FFFFFF', track: -1 });
   }
+  ctx.restore();
+}
+
+// RecurPost clock-arrow mark (square), centred at (cx, cy).
+function icon(ctx, cx, cy, size, o = {}) {
+  if (!iconImg) return;
+  ctx.save();
+  if (o.alpha != null) ctx.globalAlpha *= o.alpha;
+  ctx.drawImage(iconImg, cx - size / 2, cy - size / 2, size, size);
   ctx.restore();
 }
 
@@ -156,4 +168,4 @@ function slam(ctx, str, cx, cy, t, t0, o = {}) {
   ctx.restore();
 }
 
-module.exports = { preloadLogo, logo, postArt, lines, miniPost, statusPill, cursor, kineticType, slam };
+module.exports = { preloadLogo, logo, icon, postArt, lines, miniPost, statusPill, cursor, kineticType, slam };

@@ -1,9 +1,18 @@
 // Single source of truth for timing: scenes, voiceover placement and SFX cues.
-// Music runs at 120 BPM so every whole/half second lands on a beat.
-// `node src/timeline.js` prints the cue sheet as JSON for the audio builder.
+//
+// All scene/VO/SFX times below are written in *storyboard seconds* (the
+// original 30 s cut). The delivered spot plays everything SCALE times slower,
+// so it runs 40 s with identical copy and motion, just a calmer pace.
+// Music runs at 135 BPM: one storyboard second = 3 beats, so every scene
+// change still lands on a beat.
+// `node src/timeline.js` prints the cue sheet (in real seconds) for the audio builder.
 
-const DURATION = 30.0;
-const BPM = 120;
+const BASE_DURATION = 30.0;
+const DURATION = 40.0;
+const SCALE = DURATION / BASE_DURATION;
+const BPM = 135;
+// "ONE WORKFLOW." hit: beat 79 at 135 BPM (35.111 s real) -> storyboard time
+const SLAM = (79 * 60) / BPM / SCALE;
 
 const SCENES = [
   { id: 1, name: 'Hook / Chaos', start: 0.0, end: 2.85 },
@@ -31,8 +40,8 @@ const VO = [
   { line: 7, at: 17.15 }, // And when something goes wrong, know exactly what to fix.
   { line: 8, at: 20.35 }, // Manage conversations from one inbox.
   { line: 9, at: 23.3 },  // Turn performance into client-ready reports.
-  { line: 10, at: 26.3 }, // One workflow.
-  { line: 11, at: 27.08 },// All in RecurPost.
+  { line: 10, at: 26.18 }, // One workflow.
+  { line: 11, at: 26.95 },// All in RecurPost.
 ];
 
 // SFX cue sheet: [time, type, gain]
@@ -109,8 +118,8 @@ add(24.8, 'report_impact', 0.85);
 add(25.6, 'whoosh_rev', 0.6);
 // S10 hero
 add(26.0, 'riser_short', 0.6);
-add(26.5, 'impact_big', 1.0);   // ONE WORKFLOW. on the beat
-[26.1, 26.2, 26.3, 26.4, 26.6, 26.7, 26.8, 26.9].forEach((t) => add(t, 'blip', 0.25));
+add(SLAM, 'impact_big', 1.0);   // ONE WORKFLOW. on the beat
+[26.1, 26.2, 26.3, 26.45, 26.6, 26.7, 26.8, 26.9].forEach((t) => add(t, 'blip', 0.25));
 add(27.1, 'shimmer', 0.6);
 add(27.9, 'whoosh_rev', 0.5);
 // S11 close
@@ -119,9 +128,18 @@ add(28.45, 'tick', 0.35);
 add(28.75, 'tick', 0.35);
 
 function cueSheet() {
-  return { duration: DURATION, bpm: BPM, scenes: SCENES, vo: VO, sfx: SFX.sort((a, b) => a[0] - b[0]) };
+  const r = (x) => +(x * SCALE).toFixed(3);
+  return {
+    duration: DURATION,
+    bpm: BPM,
+    scale: SCALE,
+    slam: r(SLAM),
+    scenes: SCENES.map((x) => ({ ...x, start: r(x.start), end: r(x.end) })),
+    vo: VO.map((v) => ({ ...v, at: r(v.at) })),
+    sfx: SFX.map(([t, k, g]) => [r(t), k, g]).sort((a, b) => a[0] - b[0]),
+  };
 }
 
-module.exports = { DURATION, BPM, SCENES, VO, SFX, cueSheet };
+module.exports = { BASE_DURATION, DURATION, SCALE, BPM, SLAM, SCENES, VO, SFX, cueSheet };
 
 if (require.main === module) process.stdout.write(JSON.stringify(cueSheet(), null, 2));

@@ -33,5 +33,7 @@ const B = {
 
 const LOGO_PATH = path.join(__dirname, '..', 'assets', 'brand', 'logo.png');
 B.logoFile = fs.existsSync(LOGO_PATH) ? LOGO_PATH : null;
+const ICON_PATH = path.join(__dirname, '..', 'assets', 'brand', 'icon.png');
+B.iconFile = fs.existsSync(ICON_PATH) ? ICON_PATH : null;
 
 module.exports = B;

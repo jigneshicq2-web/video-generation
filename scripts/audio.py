@@ -1,4 +1,4 @@
-"""Build the soundtrack: original synthesized music (120 BPM), a synced SFX layer
+"""Build the soundtrack: original synthesized music (135 BPM), a synced SFX layer
 and the voiceover, then mix with VO ducking and master to broadcast levels.
 
 Inputs : cue sheet from `node src/timeline.js`, audio/vo/lineNN.wav
@@ -17,6 +17,9 @@ cues = json.loads(subprocess.check_output(["node", f"{ROOT}/src/timeline.js"]))
 DUR = cues["duration"]
 N = int(DUR * SR)
 BEAT = 60.0 / cues["bpm"]
+S = cues["scale"]          # real seconds per storyboard second
+T = lambda x: x * S        # storyboard time -> real time
+SLAM = cues["slam"]        # "ONE WORKFLOW." hit (real time, on the beat)
 rng = np.random.default_rng(42)
 
 
@@ -105,15 +108,15 @@ def midi(m):
 # ---------------------------------------------------------------- music
 def build_music():
     mus = np.zeros((N, 2))
-    # chords per bar (2 s): Am F C G, looped. (root midi, chord tones)
+    # chords per bar (4 beats): Am F C G, looped. (root midi, chord tones)
     prog = [(45, [57, 60, 64, 67]), (41, [53, 57, 60, 64]), (48, [55, 60, 64, 67]), (43, [55, 59, 62, 67])]
     bars = int(np.ceil(DUR / (4 * BEAT)))
 
     def chord_at(t):
         return prog[int(t // (4 * BEAT)) % 4]
 
-    # --- intro tension 0 - 2.7: drone + riser + accelerating ticks
-    d = t_(2.7)
+    # --- intro tension until the freeze: drone + riser + accelerating ticks
+    d = t_(T(2.7))
     drone = (saw(midi(33), d) * 0.5 + saw(midi(33), d, 0.004) * 0.5)
     drone = lp(drone, 380) * np.linspace(0.3, 0.9, len(d))
     place(mus, drone * 0.35, 0.0)
@@ -122,9 +125,9 @@ def build_music():
     place(mus, rz * 0.12, 0.0, pan=-0.2)
     tt = 0.0
     step = 0.25
-    while tt < 2.65:
+    while tt < T(2.65):
         tick = hp(noise(int(0.03 * SR)), 7000) * env_ad(int(0.03 * SR), 0.001, 0.02)
-        place(mus, tick * (0.12 + 0.2 * tt / 2.7), tt, pan=0.3 if int(tt * 8) % 2 else -0.3)
+        place(mus, tick * (0.12 + 0.2 * tt / T(2.7)), tt, pan=0.3 if int(tt * 8) % 2 else -0.3)
         tt += step
         step = max(0.0625, step * 0.9)
     # pitch-rising tension tone
@@ -155,10 +158,10 @@ def build_music():
 
     K, CL, HC, HO = kick(), clap(), hat(), hat(True)
     kick_times = []
-    beat = 3.0
-    while beat < 28.0 - 1e-6:
-        in_break = 25.5 <= beat < 26.5  # short drop before the hero hit
-        rel = beat - 3.0
+    beat = T(3.0)
+    while beat < T(28.0) - 1e-6:
+        in_break = T(25.5) <= beat < SLAM - 1e-6  # short drop before the hero hit
+        rel = beat - T(3.0)
         bi = int(round(rel / BEAT))
         if not in_break:
             place(mus, K, beat, 0.95)
@@ -166,16 +169,16 @@ def build_music():
             if bi % 2 == 1:
                 place(mus, CL, beat, 0.55, 0.05)
             # hats
-            place(mus, HC, beat + BEAT / 2, 0.22 if beat < 10 else 0.28, 0.25)
-            if beat >= 10:
+            place(mus, HC, beat + BEAT / 2, 0.22 if beat < T(10) else 0.28, 0.25)
+            if beat >= T(10):
                 place(mus, HC, beat + BEAT / 4, 0.12, -0.25)
                 place(mus, HC, beat + 3 * BEAT / 4, 0.12, -0.25)
-            if beat >= 20:
+            if beat >= T(20):
                 place(mus, HO, beat + BEAT / 2, 0.14, 0.3)
         beat += BEAT
     # snare roll into the hero moment
     for i in range(8):
-        place(mus, CL, 25.5 + i * BEAT / 4 + (i // 4) * 0, 0.2 + 0.05 * i, 0.0)
+        place(mus, CL, SLAM - 2 * BEAT + i * BEAT / 4, 0.2 + 0.05 * i, 0.0)
 
     # sidechain envelope from kicks
     sc = np.ones(N)
@@ -187,12 +190,12 @@ def build_music():
 
     # --- bass (8ths on the root) 3.0 - 28
     bass = np.zeros(N)
-    t0 = 3.0
-    while t0 < 28.0:
+    t0 = T(3.0)
+    while t0 < T(28.0):
         root, _ = chord_at(t0)
         n = int(BEAT / 2 * SR)
         tt_ = np.arange(n) / SR
-        f = midi(root - 12 + (12 if (t0 >= 20 and int(t0 / (BEAT / 2)) % 2) else 0))
+        f = midi(root - 12 + (12 if (t0 >= T(20) and int(t0 / (BEAT / 2)) % 2) else 0))
         note = (np.sin(2 * np.pi * f * tt_) * 0.8 + saw(f, tt_) * 0.35) * env_ad(n, 0.004, 0.22, 3)
         i = int(t0 * SR)
         bass[i:i + n] += note[: max(0, min(n, N - i))]
@@ -205,9 +208,9 @@ def build_music():
     pad = np.zeros((N, 2))
     for b in range(bars):
         start = b * 4 * BEAT
-        if start + 4 * BEAT < 2.9:
+        if start + 4 * BEAT < T(2.9):
             continue
-        s0 = max(start, 2.9)
+        s0 = max(start, T(2.9))
         dur = min(start + 4 * BEAT, DUR) - s0
         if dur <= 0:
             continue
@@ -228,45 +231,45 @@ def build_music():
         seg2 = lp(pad[:, c], 2400)
         seg3 = lp(pad[:, c], 3600)
         tt_ = np.arange(N) / SR
-        w2 = np.clip((tt_ - 10) / 2, 0, 1)
-        w3 = np.clip((tt_ - 20) / 2, 0, 1)
+        w2 = np.clip((tt_ - T(10)) / 2, 0, 1)
+        w3 = np.clip((tt_ - T(20)) / 2, 0, 1)
         padf[:, c] = seg1 * (1 - w2) + seg2 * (w2 - w3) + seg3 * w3
     padf *= sc[:, None] * 0.055
     mus += padf
 
     # --- arp (16ths plucks) 10 - 28
-    t0 = 10.0
+    t0 = T(10.0)
     idx = 0
-    while t0 < 28.0:
-        if not (25.5 <= t0 < 26.5):
+    while t0 < T(28.0):
+        if not (T(25.5) <= t0 < SLAM - 1e-6):
             _, tones = chord_at(t0)
             m = tones[[0, 1, 2, 3, 2, 1, 3, 2][idx % 8]] + 12
             n = int(0.18 * SR)
             tt_ = np.arange(n) / SR
             pl = saw(midi(m), tt_) * env_ad(n, 0.002, 0.08, 5)
-            pl = lp(pl, 2500 if t0 < 20 else 4200)
-            place(mus, pl, t0, 0.07 if t0 < 20 else 0.09, pan=0.35 if idx % 2 else -0.35)
+            pl = lp(pl, 2500 if t0 < T(20) else 4200)
+            place(mus, pl, t0, 0.07 if t0 < T(20) else 0.09, pan=0.35 if idx % 2 else -0.35)
         t0 += BEAT / 4
         idx += 1
 
     # --- risers into scene changes & the hero hit
-    for at, d, g in [(9.0, 1.0, 0.05), (19.0, 1.0, 0.06), (25.4, 1.1, 0.12)]:
+    for at, d, g in [(T(9.0), 1.0, 0.05), (T(19.0), 1.0, 0.06), (SLAM - 1.6, 1.6, 0.12)]:
         z = noise(int(d * SR))
         z = sweep_filter(z, 400, 9000, "low") * np.linspace(0, 1, len(z)) ** 2
         place(mus, z, at, g, 0.15)
 
     # --- final branded chord 28 - 30 (Am add9 with bell)
-    tt_ = t_(2.0)
+    tt_ = t_(DUR - T(28.0))
     fin = np.zeros(len(tt_))
     for m in (45, 57, 64, 67, 71, 72):
         fin += np.sin(2 * np.pi * midi(m) * tt_) * (0.5 if m > 60 else 0.8)
         fin += saw(midi(m), tt_, 0.004) * 0.08
     fin = lp(fin, 2500) * np.exp(-tt_ * 0.9) * np.minimum(1, tt_ / 0.02)
-    place(mus, fin * 0.09, 28.0)
+    place(mus, fin * 0.09, T(28.0))
 
     # hard gap at the freeze (2.7 - 2.9): only tails remain
     g = np.ones(N)
-    a, b = int(2.7 * SR), int(2.92 * SR)
+    a, b = int(T(2.7) * SR), int(T(2.92) * SR)
     g[a:b] = 0.0
     mus *= g[:, None]
     mus = reverb(mus, 0.16, 1.4, 3.0)
@@ -520,8 +523,8 @@ def main():
     fx_n *= (1 - 0.25 * np.clip(duck * 2.2, 0, 1))[:, None]
     mix = vo_st + mus_n + fx_n
     mix = norm(mix, -14.0)
-    mix = limiter(mix, -1.2)
-    mix = limiter(mix, -1.2)
+    mix = limiter(mix, -2.2)
+    mix = limiter(mix, -2.2)
     L = meter.integrated_loudness(mix)
     print(f"integrated loudness {L:.1f} LUFS, sample peak {20*np.log10(np.abs(mix).max()):.2f} dBFS")
     sf.write(f"{ROOT}/audio/mix.wav", mix.astype(np.float32), SR, subtype="PCM_24")
