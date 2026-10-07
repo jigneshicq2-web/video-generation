@@ -1,0 +1,25 @@
+<html><head><link rel="stylesheet" href="base.css"><style>
+.ad{background:#1F1F1F;color:#fff}
+h1{margin-top:64px;font-weight:800;font-size:86px;line-height:1.08;letter-spacing:-2.5px}
+h1 span{color:#FFCC43}
+.lab{margin-top:48px;font-size:24px;font-weight:500;color:#9A9A9A}
+.row{display:flex;align-items:center;gap:30px;margin-top:16px}
+.dots{display:grid;grid-template-columns:repeat(30,1fr);gap:7px;width:640px}
+.dots i{width:14px;height:14px;border-radius:50%;background:#3A3A3A;display:block}
+.arrow{width:110px}
+.link{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;font-size:26px;font-weight:600}
+.link div{width:150px;height:150px;border-radius:50%;background:#FFCC43;display:flex;align-items:center;justify-content:center}
+p{margin-top:48px;font-size:36px;font-weight:500;line-height:1.35;color:rgba(255,255,255,.85);max-width:900px}
+.foot{display:flex;align-items:center;justify-content:space-between}
+.fn{font-size:20px;color:#6B6B6B;max-width:300px;text-align:right}
+</style></head><body><div class="ad">
+<img class="logo" src="logo-white.webp" style="height:40px">
+<h1>20 clients × 30 posts<br>= <span>600 approvals</span><br>every month.</h1>
+<div class="lab">Every dot = one approval to chase</div>
+<div class="row"><div class="dots" id="d"></div>
+<svg class="arrow" viewBox="0 0 110 60"><path d="M4 40C30 6 70 6 92 28" fill="none" stroke="#FFCC43" stroke-width="8" stroke-linecap="round"/><path d="M78 36l22 2-6-22z" fill="#FFCC43"/></svg>
+<div class="link"><div><svg width="80" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" stroke-width="2.4" stroke-linecap="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div>1 link per client</div></div>
+<p>Stop chasing. Send links. Clients approve without logging in.</p>
+<div class="foot push"><div class="cta">Scale Your Approvals <span>&gt;</span></div><div class="fn">Example: 20 clients, ~30 posts each per month.</div></div>
+<script>document.getElementById('d').innerHTML='<i></i>'.repeat(600)</script>
+</div></body></html>
