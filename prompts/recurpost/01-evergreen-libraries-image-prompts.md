@@ -11,7 +11,12 @@
 4. Then paste **one** variation prompt (V1–V10). Generate. Review against the QC checklist (Block C).
 5. For the next variation, paste the next prompt in the same chat (style guide stays in context), or start a new chat and repeat steps 2–3.
 
-**Before first use, fill in the 6 hex codes in Block A.** I could not access recurpost.com from my environment, so the colours are placeholders. Get them from the brand guide, or use a colour picker on the website/logo. If you leave them blank, the prompt tells the model to sample colours from the uploaded logo, which is less reliable.
+**Brand colours are locked in Block A.** They were sampled from the official logo files: Yellow `#FFCC43`, Black `#1F1F1F`, White `#FFFFFF`. The off-white, grey and alert red are supporting tints I derived from those, not official brand colours.
+
+**Which logo to upload:**
+- Light background ads: the **black wordmark** (black text + yellow "O" clock)
+- Dark/black background ads: the **white wordmark** (white text + yellow "O" clock)
+- V8 only (app-notification icon): additionally upload the **yellow clock icon** on its own
 
 **Honest limitation:** AI image models still misspell text, especially Hinglish words and lines longer than about 8 words. Every prompt below keeps on-image text short and quotes it exactly. If a word comes out wrong after 2 retries, use the **text-free fallback** at the bottom of each prompt and add the typography in Canva/Figma. That route gives you pixel-perfect type every time.
 
@@ -29,20 +34,27 @@ You are a senior performance-marketing graphic designer with 10+ years designing
 - Safe zone: keep ALL text and the logo at least 64 px from every edge. Keep the bottom 120 px free of critical text (Instagram UI overlays it).
 - Layout grid: 12-column, 64 px outer margins, 24 px gutters. Everything aligns to this grid. Clean, generous negative space; never cluttered.
 
-=== BRAND COLOURS (use ONLY these, plus pure white #FFFFFF) ===
-- PRIMARY (brand main):        #______   (fill in)
-- PRIMARY_DARK (deep bg/text): #______   (fill in)
-- ACCENT (CTA, highlights):    #______   (fill in)
-- LIGHT_BG (soft background):  #______   (fill in)
-- TEXT_DARK (body text):       #______   (fill in)
-- ALERT (pain/problem red):    #______   (fill in, use sparingly)
-If any hex above is blank, sample the brand colours from the uploaded RecurPost logo and build a harmonious palette from them: one dominant brand colour, one deep shade of it, one contrasting accent for CTAs, an off-white background. Colour ratio per ad: 60% background, 30% primary, 10% accent. Never use gradients with more than 2 stops. No neon, no rainbow.
+=== BRAND COLOURS (RecurPost is a BLACK + YELLOW + WHITE brand; use ONLY these) ===
+- PRIMARY = ACCENT = RecurPost Yellow:  #FFCC43   (the yellow from the logo clock; the hero brand colour)
+- PRIMARY_DARK = TEXT_DARK = RecurPost Black: #1F1F1F   (the logo wordmark black; use instead of pure #000000)
+- WHITE:                                #FFFFFF
+- LIGHT_BG (warm off-white tint):       #FFF8E6
+- GREY (secondary text, inactive UI):   #6B6B6B   (light UI lines/placeholder bars: #E6E6E6)
+- ALERT (pain/problem red; use sparingly, max 1 element per ad): #E5484D
+Colour ratio per ad: 60% background (white, #FFF8E6 or black), 30% black/white type and UI, 10% yellow. Yellow is precious: it marks the ONE thing the eye should hit (highlight word, CTA, hero UI element). No blues, no purples, no other brand colours. No gradients except a subtle black-to-#2A2A2A vignette on dark ads. No neon.
+
+=== YELLOW CONTRAST RULES (critical; yellow text on white is unreadable) ===
+- NEVER set yellow (#FFCC43) text on white or #FFF8E6 backgrounds.
+- On LIGHT backgrounds: highlight words get a YELLOW HIGHLIGHTER BOX behind BLACK text (like a marker swipe: rounded rectangle, 6 px radius, 10 px horizontal padding, slightly offset 4 px down).
+- On BLACK backgrounds: highlight words are set directly in YELLOW text. Other text is white.
+- Text placed ON a yellow fill is ALWAYS black #1F1F1F, never white.
+- Anywhere a brief says "PRIMARY/ACCENT colour text" on a light background, apply the highlighter-box treatment instead.
 
 === TYPOGRAPHY (most important; get this right) ===
 - Typeface: one modern geometric sans-serif family only, in the style of "Inter", "Plus Jakarta Sans" or "Poppins". Never serif, never script/handwritten (unless the brief asks for a handwritten annotation), never decorative.
 - Hierarchy (sizes relative to a 1080 px wide canvas):
   - HEADLINE: Bold/ExtraBold (700-800), 72-96 px, line-height 1.05-1.1, letter-spacing -1% to -2%, max 3 lines, max ~8 words per line.
-  - HIGHLIGHT WORDS: the 1-3 words marked [HIGHLIGHT] in the brief are set in ACCENT colour OR on an ACCENT-coloured rounded rectangle behind the text (4-6 px corner radius, 8-12 px padding). Never both treatments at once.
+  - HIGHLIGHT WORDS: the 1-3 words marked [HIGHLIGHT] in the brief follow the YELLOW CONTRAST RULES above (yellow highlighter box + black text on light bg; yellow text on black bg). Never both treatments at once.
   - SUBHEADLINE: Medium (500), 34-42 px, line-height 1.3, TEXT_DARK (or white on dark bg), max 2 lines.
   - SUPPORTING / LABELS: Regular-Medium (400-500), 24-30 px.
   - CTA BUTTON TEXT: SemiBold (600), 28-32 px, sentence case.
@@ -56,15 +68,19 @@ If any hex above is blank, sample the brand colours from the uploaded RecurPost 
 
 === LOGO ===
 - Use the EXACT uploaded RecurPost logo file. Do not redraw, restyle, recolour, stretch, add effects or invent a new logo.
-- Default placement: top-left, height 48-56 px, inside the safe zone. On dark backgrounds use the white/reversed version if it reads better; otherwise place the logo on a small white rounded pill.
-- The logo appears exactly ONCE.
+- The logo is a horizontal wordmark "RECURPOST" where the "O" is a yellow clock with a circular arrow. Black wordmark version for light backgrounds, white wordmark version for black backgrounds. Keep the yellow clock "O" yellow in both.
+- Default placement: top-left, wordmark height 40-48 px (it is very wide, so keep it modest), inside the safe zone.
+- The logo appears exactly ONCE. The yellow clock icon may additionally appear ONLY where a brief explicitly asks for an app icon.
+- Brand motif (optional, subtle): the circular-arrow "recurring" shape from the logo clock may be echoed as a large faint graphic element (yellow at 15% opacity, or thin yellow outline) behind the composition. Never let it compete with the headline.
 
 === CTA BUTTON ===
-- Rounded pill (fully rounded ends), ACCENT fill, white or PRIMARY_DARK text (whichever has higher contrast), 88-100 px tall, subtle 8% drop shadow, optional small right-arrow icon ">" after the text.
+- Rounded pill (fully rounded ends), 88-100 px tall, subtle 8% drop shadow, optional small right-arrow icon ">" after the text.
+- On white/off-white/black backgrounds: YELLOW #FFCC43 fill with BLACK #1F1F1F text.
+- On a yellow background: BLACK #1F1F1F fill with YELLOW or WHITE text.
 - Default placement: bottom-left or bottom-centre, above the 120 px bottom margin.
 
 === UI MOCKUPS (when a brief asks for product UI) ===
-- Clean, modern SaaS dashboard aesthetic: white cards, 16-24 px rounded corners, soft shadows (y=8, blur=24, 8-10% opacity), thin 1 px light-grey borders, PRIMARY as the only UI accent colour.
+- Clean, modern SaaS dashboard aesthetic: white cards, 16-24 px rounded corners, soft shadows (y=8, blur=24, 8-10% opacity), thin 1 px #E6E6E6 borders, black text, yellow #FFCC43 as the only UI accent (active toggles, selected chips, loop icons, progress bars).
 - Device frames: modern flat laptop or iPhone with thin bezels, no real-brand logos (no Apple logo).
 - "Pop-out" technique: one key UI card breaks OUT of the device frame, overlaps the frame edge, sits slightly larger (110%) with a stronger shadow. This is the hero element.
 - Social platform icons may be shown as generic simplified glyphs in their recognisable shape/colour (LinkedIn, Instagram, Facebook, X, Google Business). Keep them small.
@@ -79,7 +95,7 @@ If any hex above is blank, sample the brand colours from the uploaded RecurPost 
 Premium, clean, confident B2B SaaS, in the style of a top-tier Indian D2C/SaaS performance ad: bold headline, one clear visual idea, one CTA. It must be readable in 1.5 seconds on a phone at thumbnail size. Flat-modern with soft depth (light shadows), not skeuomorphic, not 3D-clay, not cartoonish (unless the brief asks for illustration).
 
 === GLOBAL NEGATIVE PROMPT (never do this) ===
-misspelled text, extra words, gibberish text, fake URLs, watermark, multiple logos, distorted logo, redrawn logo, serif fonts, script fonts, comic sans, cluttered layout, more than one CTA, text touching edges, low contrast text, text over busy photo areas, neon colours, rainbow gradients, clip-art, emoji overload, deformed hands, extra fingers, plastic skin, celebrity faces, Apple logo, real competitor logos, blurry, jpeg artefacts, frames/borders around the whole ad.
+blue or purple tones, yellow text on white backgrounds, white text on yellow, misspelled text, extra words, gibberish text, fake URLs, watermark, multiple logos, distorted logo, redrawn logo, serif fonts, script fonts, comic sans, cluttered layout, more than one CTA, text touching edges, low contrast text, text over busy photo areas, neon colours, rainbow gradients, clip-art, emoji overload, deformed hands, extra fingers, plastic skin, celebrity faces, Apple logo, real competitor logos, blurry, jpeg artefacts, frames/borders around the whole ad.
 
 Confirm you understand by replying "Style guide locked. Send brief V1." Do not generate an image yet.
 ```
@@ -163,7 +179,7 @@ LAYOUT:
    Line 1: "Client ne pucha:"
    Line 2: "\"Last week post kyun nahi gaya?\""
    [HIGHLIGHT] = "kyun nahi gaya?" (ACCENT colour).
-3. Middle-to-bottom 60%: photorealistic image of a stressed Indian female account manager (late 20s, hair tied back, beige blazer), sitting at a desk at night, laptop open, holding her phone, looking at it with visible anxiety, hand on forehead. Warm desk lamp light, dark blue office background, shallow depth of field.
+3. Middle-to-bottom 60%: photorealistic image of a stressed Indian female account manager (late 20s, hair tied back, beige blazer), sitting at a desk at night, laptop open, holding her phone, looking at it with visible anxiety, hand on forehead. Warm desk lamp light, dark charcoal office background, shallow depth of field.
 4. Floating over the photo, upper-right of her phone, a large WhatsApp-style chat bubble (generic green-white chat UI, NO WhatsApp logo) from a contact named "Client", message text: "Last week ek bhi post nahi gaya??", timestamp "11:42 PM", double grey ticks.
 5. Bottom area: a white rounded card (90% opacity) containing:
    Sub-line: "RecurPost libraries kabhi khaali nahi hote."
@@ -333,12 +349,12 @@ LAYOUT:
 3. Centre 50%: a clean INFOGRAPHIC: a large white rounded weekly calendar card (Mon to Sun columns, 3 rows for weeks) with soft shadow.
    - Column headers exactly: "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun".
    - Cells are filled with colour-coded rounded chips in a repeating pattern:
-     PRIMARY chips = Tips (on Tue in all 3 weeks),
-     ACCENT chips = Testimonials (on Fri in all 3 weeks),
-     a third harmonious colour = Offers (on Sun in all 3 weeks),
-     a light grey chip = Blog (on Mon and Thu).
+     YELLOW #FFCC43 chips = Tips (on Tue in all 3 weeks),
+     BLACK #1F1F1F chips = Testimonials (on Fri in all 3 weeks),
+     MID-GREY #9A9A9A chips = Offers (on Sun in all 3 weeks),
+     LIGHT-GREY #DADADA chips = Blog (on Mon and Thu).
    - Chips contain NO text, only colour. The pattern must visibly repeat week after week (that's the point).
-   - A thin circular loop arrow in PRIMARY wraps around the right edge of the calendar.
+   - A thick circular loop arrow in YELLOW (same shape as the logo's clock arrow) wraps around the right edge of the calendar.
 4. Directly under the calendar, a legend row with 4 colour dots + labels: "Tips", "Testimonials", "Offers", "Blog".
 5. Bottom: subheadline: "Category schedules decide. On repeat. Automatically."
    CTA pill: "Build Your Content Mix >"
@@ -366,7 +382,7 @@ LAYOUT:
    Line 1: "Client ka blog likha."
    Line 2: "1 share. Bas?"
    [HIGHLIGHT] = "Bas?" (ALERT colour).
-3. Centre 55%: a horizontal-to-circular FLOW DIAGRAM, clean flat-3D icons with soft shadows, connected by thick PRIMARY arrows:
+3. Centre 55%: a horizontal-to-circular FLOW DIAGRAM, clean flat-3D icons with soft shadows, connected by thick BLACK #1F1F1F arrows (the hero card uses a YELLOW border and yellow loop arrow):
    Step 1 (left): a document/blog-page icon card, label "Blog".
    Arrow ->
    Step 2: an orange RSS-signal icon card, label "RSS".
