@@ -8,8 +8,8 @@ audio/sfx.wav
 audio/vo_track.wav
 models/
 __pycache__/
-out/bumper_silent*.mp4
-out/bumper_stills/
+out/bumper_*_silent*.mp4
+out/bumper_*_stills/
 out/bumper_audio_spectrum.png
-audio/bumper/music.wav
-audio/bumper/sfx.wav
+audio/bumper/*/music.wav
+audio/bumper/*/sfx.wav

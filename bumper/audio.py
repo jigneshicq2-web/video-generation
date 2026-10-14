@@ -1,8 +1,8 @@
 """Bumper soundtrack: original synthesized corporate-electronic bed (120 BPM), UI SFX from the
 cue sheet, and the VO, mixed with ducking and mastered to -14 LUFS / <= -1 dBTP.
 Everything is generated here (no stock or library audio), so it is cleared for commercial use.
-Outputs audio/bumper/{music,sfx,mix}.wav."""
-import json, os, subprocess
+Usage: python3 bumper/audio.py <spot>   -> audio/bumper/<spot>/{music,sfx,mix}.wav"""
+import json, os, subprocess, sys
 import numpy as np
 import soundfile as sf
 from scipy import signal
@@ -10,9 +10,10 @@ from scipy.ndimage import maximum_filter1d
 import pyloudnorm as pyln
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = f"{ROOT}/audio/bumper"
+SPOT = sys.argv[1] if len(sys.argv) > 1 else "batch"
+OUT = f"{ROOT}/audio/bumper/{SPOT}"
 SR = 48000
-cues = json.loads(subprocess.check_output(["node", f"{ROOT}/bumper/timeline.js"]))
+cues = json.loads(subprocess.check_output(["node", f"{ROOT}/bumper/spots/{SPOT}/timeline.js"]))
 DUR = cues["duration"]
 N = int(round(DUR * SR))
 BEAT = 60.0 / cues["bpm"]
@@ -174,6 +175,16 @@ def sfx(kind):
         m = int(0.035 * SR)
         return (filt(rng.standard_normal(m), [2500, 9000]) * env(m, 0.0004, 0.006) * 0.7
                 + np.sin(2 * np.pi * 1900 * t_(0.035)) * env(m, 0.0004, 0.008) * 0.35)
+    if kind == "notif":  # one restrained message notification: soft two-tone ping
+        out = np.zeros(int(0.45 * SR))
+        for i, (m_, g) in enumerate(((81, 0.8), (86, 0.6))):
+            m = int(0.3 * SR); tt = t_(0.3)
+            tone = (np.sin(2 * np.pi * midi(m_) * tt) + 0.15 * np.sin(6 * np.pi * midi(m_) * tt)) * env(m, 0.002, 0.11)
+            s0 = int(i * 0.085 * SR); out[s0:s0 + m] += tone * g
+        return out * 0.4
+    if kind == "whoosh_soft":
+        z = sweep(rng.standard_normal(int(0.32 * SR)), 400, 3500)
+        return z * np.sin(np.linspace(0, np.pi, len(z))) ** 2 * 0.35
     if kind == "whoosh":
         z = sweep(rng.standard_normal(int(0.4 * SR)), 500, 5500)
         return z * np.sin(np.linspace(0, np.pi, len(z))) ** 1.6 * 0.55
