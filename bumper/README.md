@@ -4,11 +4,12 @@
 |---|---|---|---|
 | 1 | `batch`: "Batch schedule" | `out/RecurPost_Bumper_6s_16x9.mp4` | `out/RecurPost_Bumper_6s_16x9_alt_side-lockup.mp4` |
 | 2 | `where`: "Where's the post?" | `out/RecurPost_Bumper2_WheresThePost_6s_16x9.mp4` | `out/RecurPost_Bumper2_WheresThePost_6s_16x9_alt_side-lockup.mp4` |
+| 3 | `reports`: "Month-end reports" | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9.mp4` | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9_alt_side-lockup.mp4`; agency-cover variant: `..._alt_agency-cover.mp4` (`COVER=agency`) |
 
 All files are 1920×1080, 30 fps, H.264 High, AAC 48 kHz stereo, exactly 6.000 s, mastered to about −14 LUFS with true peak ≤ −1.9 dBFS.
 
 ```
-SPOT=where                                  # or batch
+SPOT=reports                                # batch | where | reports
 python3 bumper/vo.py $SPOT                  # exact-script VO -> audio/bumper/$SPOT/vo{0,1,2}.wav (Kokoro af_heart @ 1.2x)
 python3 bumper/audio.py $SPOT               # music + SFX + VO -> audio/bumper/$SPOT/mix.wav
 node bumper/render.js $SPOT video           # -> out/bumper_${SPOT}_silent.mp4 (END_LAYOUT=side for the alternate end card)
@@ -52,7 +53,17 @@ Trade-off: the first VO line (~2.2 s) runs about 0.7 s past Scene 1 into the pau
 - **Continuity:** the located post is the same card that sat next to the client's message in Scene 1, carrying the same artwork.
 - **Brief inconsistency kept as written:** the on-screen line says "CLIENT POST" while the VO says "every post", exactly as the brief specifies.
 
-## Brand and compliance (both spots)
+## Video 3 — "Month-end reports eating your Friday?"
+| Time | Visual | Copy | VO |
+|---|---|---|---|
+| 0.00–1.50 | A tear-off calendar page flips to MONTH-END (flip SFX). Nine unbranded grey report pages fall onto a desk, 0.20–0.84 s, with soft paper hits and one heavier impact on the last page. The camera pushes in so the pile fills the frame, and a small clock ticks on the 8th-note grid. | CLIENT REPORTS. / **THERE GOES FRIDAY.** · MONTH-END | 0.04–1.73 "Client reports. There goes Friday." |
+| 1.50–3.80 | The pile compresses into one digital report (whoosh). The supplied logo lands on the cover, and abstract brand-coloured charts build: bars, a donut and a line, with no numbers, axes or labels. A dotted path leads to a recurring-calendar icon and a scheduled-email icon. The email icon's clock badge resolves to a check with the confirmation tone at 2.78 s. | BRANDED REPORTS. / **SCHEDULED DELIVERY.** | 1.82–3.70 "Brand and schedule them with RecurPost." |
+| 3.80–6.00 | Same wipe and end card as the series. | Logo · TRY RECURPOST FREE | 4.28–4.95 "Try it free." |
+
+- **Charts:** the bars deliberately show no upward trend, and the line wanders, so nothing reads as a results or time-savings claim.
+- **`COVER=agency` variant:** replaces the RecurPost logo on the report cover with an abstract, letter-free "your agency" mark. The brief asked for the RecurPost logo on the cover, but the core message is reports presented under the *agency's* brand. A RecurPost logo on the client report can read as "reports branded RecurPost", which is the opposite of what is being sold. The default cut follows the brief; the variant is there to compare.
+
+## Brand and compliance (all spots)
 - **Logo:** `assets/brand/logo_dark_text.png` matches the supplied file to within WebP→PNG rounding (≤0.5%, alpha identical). It is drawn at its native 2000:245 ratio with no recolor, crop, shadow or effect. Only position and opacity animate on entry.
 - **Palette:** sampled from the logo: yellow `#FFCD42` and charcoal `#1F1F1F` on a warm off-white.
 - **UI:** abstract bars, shapes and icons. There are no platform logos, metrics, URL, pricing, quotes or claims. The only words on screen are the phrases each brief specifies.

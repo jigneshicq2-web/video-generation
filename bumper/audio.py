@@ -182,6 +182,16 @@ def sfx(kind):
             tone = (np.sin(2 * np.pi * midi(m_) * tt) + 0.15 * np.sin(6 * np.pi * midi(m_) * tt)) * env(m, 0.002, 0.11)
             s0 = int(i * 0.085 * SR); out[s0:s0 + m] += tone * g
         return out * 0.4
+    if kind == "flip":  # quick calendar-page flip: papery swish ending in a light snap
+        n = int(0.16 * SR); tt = np.arange(n) / SR
+        sw = filt(rng.standard_normal(n), [1500, 9000]) * np.sin(np.linspace(0, np.pi, n)) ** 2 * 0.5
+        snap = filt(rng.standard_normal(n), [2000, 7000]) * np.exp(-np.maximum(0, tt - 0.12) * 120) * (tt > 0.12) * 0.6
+        return sw + snap
+    if kind == "paper":  # soft paper-stack impact: low thump + papery slap
+        n = int(0.3 * SR); tt = np.arange(n) / SR
+        thump = np.sin(2 * np.pi * np.cumsum(70 + 60 * np.exp(-tt * 30)) / SR) * np.exp(-tt * 18)
+        slap = filt(rng.standard_normal(n), [600, 5000]) * np.exp(-tt * 45)
+        return (thump * 0.7 + slap * 0.6) * 0.8
     if kind == "whoosh_soft":
         z = sweep(rng.standard_normal(int(0.32 * SR)), 400, 3500)
         return z * np.sin(np.linspace(0, np.pi, len(z))) ** 2 * 0.35

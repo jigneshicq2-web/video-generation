@@ -282,4 +282,5 @@ async function run(spotName, mode = 'video', arg) {
 module.exports = {
   W, H, FPS, ROOT, C, CLIENT, VARIANTS, font, clamp, lerp, E, ep, rr, fillRR, shadowed,
   clockIcon, checkIcon, stackIcon, cursor, background, thumb, cardShell, riseText, run,
+  getLogo: () => LOGO, // the supplied logo, loaded once before rendering
 };
