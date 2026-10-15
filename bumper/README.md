@@ -1,10 +1,11 @@
-# RecurPost — YouTube bumpers (6 s) and in-stream (20 s), 16:9
+# RecurPost — YouTube bumpers (6 s) and in-stream (20 s, 25 s), 16:9
 
 | # | Spot | Deliverable | Alternate (logo and CTA side by side) |
 |---|---|---|---|
 | 1 | `batch`: "Batch schedule" | `out/RecurPost_Bumper_6s_16x9.mp4` | `out/RecurPost_Bumper_6s_16x9_alt_side-lockup.mp4` |
 | 2 | `where`: "Where's the post?" | `out/RecurPost_Bumper2_WheresThePost_6s_16x9.mp4` | `out/RecurPost_Bumper2_WheresThePost_6s_16x9_alt_side-lockup.mp4` |
 | 4 | `unified`: 20 s skippable in-stream, "One calendar view" | `out/RecurPost_InStream_OneCalendarView_20s_16x9.mp4` | — (own end card) |
+| 5 | `failed`: 25 s skippable in-stream, "A post fails" | `out/RecurPost_InStream_FailedPost_25s_16x9.mp4` | — (own end card) |
 | 3 | `reports`: "Month-end reports" | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9.mp4` | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9_alt_side-lockup.mp4`; agency-cover variant: `..._alt_agency-cover.mp4` (`COVER=agency`) |
 
 All files are 1920×1080, 30 fps, H.264 High, AAC 48 kHz stereo, exactly 6.000 s, mastered to about −14 LUFS with true peak ≤ −1.9 dBFS.
@@ -21,6 +22,7 @@ node bumper/render.js $SPOT sheet 0.25      # QA contact sheet -> out/bumper_${S
 
 ## Structure
 ```
+bumper/ui.js                      long-form UI kit: post cards, status badges, headlines, backdrop, layer camera
 bumper/lib.js                     shared: palette, type, easing, icons, background, card parts, yellow wipe, end card, frame driver
 bumper/spots/<spot>/timeline.js   timing source of truth: scene bounds, VO placement, SFX cue sheet
 bumper/spots/<spot>/scenes.js     that spot's Scene 1–2 drawing
@@ -86,6 +88,25 @@ One continuous story built around one post card, the "hero" with a yellow outlin
 - **Audio:**
   - **Music:** an original 20 s bed (`music: 'long20'`): A-minor problem section, drums drop out on the freeze, a rise into a C–G–Am–F groove, a lift into the end card, then a resolving sting.
   - **Effects:** clicks, a notification, a whoosh, a riser, four light confirmations and a snap.
+
+## 25 s in-stream — "A post fails. The client notices first." (`failed`)
+One continuous story around one scheduled post card (dark artwork). It fails at its slot, joins its client's timeline, and the timeline becomes the History view. The card then opens into a detail panel, folds back into History, and the cards gather into the brand panel, which becomes the CTA.
+
+| Time | Visual | Copy | VO |
+|---|---|---|---|
+| 0.0–3.5 | Card glides to a dashed publishing slot, pauses, and at 1.3 s gets a red outline, a "!" badge and a Failed label (soft alert, no alarm). It then slides into its client's timeline. | **POST FAILED** · Failed | 0.30–1.61 |
+| 3.5–7.0 | Timeline with published (check) and scheduled (clock) posts; the failed card is the anchor. The client message pops in (notification), then slides aside as the camera pushes toward the card. | **THE CLIENT NOTICED FIRST.** · "Wasn’t this supposed to go live?" | 3.75–5.23 |
+| 7.0–12.0 | The timeline becomes the History view: three client rows, logo in the panel bar. The failed post is highlighted, the rest step back, and a team member (generic avatar and cursor) reviews it. A callout appears on "see the reason": an info icon, the label and abstract lines. No error text is invented. | **REVIEW FAILED POSTS IN HISTORY** · Reason shown in History | 7.15–11.78 |
+| 12.0–17.5 | The card expands into a detail panel with Failed, the reason box, **Edit and Retry** and **Retry Now**. The cursor hovers Edit and Retry on "edit", then selects Retry Now on "now" (click + restrained confirmation). A neutral **Retry action selected** chip appears; there is no published or green state. The panel folds back into History, and the card keeps its Failed marker plus a neutral retry badge. | **REVIEW. EDIT. RETRY.** | 12.45–15.18 |
+| 17.5–21.0 | Pull-back to the organized three-client view. The failed post stays clearly marked and the scheduled posts stay visible. An icon-only status view sits in the panel bar. | SEE THE ISSUE. / **TAKE THE NEXT STEP.** | 17.75–20.51 |
+| 21.0–25.0 | The cards gather into a yellow brand panel that becomes the CTA pill, then the logo and supporting line build. Static from about 22.0 s; sting at 21.0 s. | Logo · Keep client publishing in view. · START YOUR RECURPOST TRIAL | 21.05–23.37 · pause · 23.60–24.78 |
+
+- **Accuracy:**
+  - **Reason:** shown only as "Reason shown in History" plus abstract lines.
+  - **Retry outcome:** stays neutral ("Retry action selected"). The card is never shown as published.
+  - **Failures:** red is used only for the failed post, with no alarm graphics.
+- **Pacing:** the VO uses 16.6 s of the 25 s at a natural 1.0× read (1.1× on the close), so every message and label has time to register. Each hold carries a slow camera push, so the only fully static stretch is the end card.
+- **Music:** the same engine as the 20 s spot, with these parameters: problem section until 7.0 s, a short drop and rise into the History reveal, a groove under the review/action beats, a lift from 20.4 s, and a sting at 21.0 s (beat 42).
 
 ## Brand and compliance (all spots)
 - **Logo:** `assets/brand/logo_dark_text.png` matches the supplied file to within WebP→PNG rounding (≤0.5%, alpha identical). It is drawn at its native 2000:245 ratio with no recolor, crop, shadow or effect. Only position and opacity animate on entry.

@@ -170,13 +170,16 @@ def build_music():
     return mus
 
 
-def build_music_long20():
-    """20 s bed (120 BPM, 40 beats). Problem in A minor (0-5 s) with a drop-out on the freeze, a rise
-    into the solution, a C-G-Am-F groove under the product beats, a lift into the end card and a
-    resolving C add9 sting on beat 33 (16.5 s)."""
+LONG20 = {"drop": 3.5, "solve": 5.0, "riser": 4.15, "demo": 8.7, "lift": 15.4, "end": 16.5}
+
+
+def build_music_long(P=LONG20):
+    """Long-form bed (120 BPM). Problem in A minor until `solve`, with drums dropping out from `drop`
+    and a rise from `riser` into the solution; a C-G-Am-F groove under the product beats (busier from
+    `demo`); a lift from `lift` into a resolving C add9 sting at `end` (on the beat)."""
     t_ = lambda d: np.arange(int(d * SR)) / SR
     mus = np.zeros((N, 2))
-    FREEZE, SOLVE, LIFT0, END = 3.5, 5.0, 15.4, 16.5
+    FREEZE, SOLVE, LIFT0, END = P["drop"], P["solve"], P["lift"], P["end"]
     def chord_l(t):
         if t < SOLVE:  # problem: Am | F (two beats each bar half)
             return (45, [57, 60, 64, 67]) if (t // 2) % 2 == 0 else (41, [57, 60, 65, 69])
@@ -197,7 +200,7 @@ def build_music_long20():
             if int(round(b / BEAT)) % 2 == 1 and b >= SOLVE:
                 place(mus, clap, b, 0.28)
             place(mus, hat, b + BEAT / 2, 0.2, 0.25)
-            if b >= 8.7:  # a little more motion under the product demo
+            if b >= P["demo"]:  # a little more motion under the product demo
                 for q in (0.25, 0.75):
                     place(mus, shk, b + q * BEAT, 0.12, -0.3)
         b += BEAT
@@ -228,7 +231,7 @@ def build_music_long20():
         _, tones = chord_l(t0)
         m_ = tones[[0, 2, 1, 3, 2, 1, 3, 2][idx % 8]] + 12
         m = int(0.2 * SR); tt = np.arange(m) / SR
-        pl = filt(saw(midi(m_), tt) * 0.6 + np.sin(2 * np.pi * midi(m_) * tt), 2600 if t0 < 8.7 else 3600) * env(m, 0.002, 0.09, 5)
+        pl = filt(saw(midi(m_), tt) * 0.6 + np.sin(2 * np.pi * midi(m_) * tt), 2600 if t0 < P["demo"] else 3600) * env(m, 0.002, 0.09, 5)
         place(mus, pl, t0, 0.07, 0.35 if idx % 2 else -0.35)
         t0 += BEAT / 2; idx += 1
     # pad: continuous, swells through the freeze (the "stillness"), dips for the lift
@@ -249,7 +252,7 @@ def build_music_long20():
     padg = 0.028 + 0.02 * np.clip((tl - FREEZE) / 0.3, 0, 1) * np.clip((SOLVE - tl) / 0.2, 0, 1)
     mus += pad * (sc * padg)[:, None]
     # rising sweep into the solution, and the lift into the end card
-    for a0, a1, g in ((4.15, SOLVE, 0.9), (LIFT0, END, 1.0)):
+    for a0, a1, g in ((P["riser"], SOLVE, 0.9), (LIFT0, END, 1.0)):
         d = a1 - a0; tt = t_(d)
         f = midi(55) * 2 ** (tt / d)
         lift = sweep(saw(1, np.cumsum(f) / SR) * 0.5, 400, 6000) * (tt / d) ** 2
@@ -295,6 +298,13 @@ def sfx(kind):
         thump = np.sin(2 * np.pi * np.cumsum(70 + 60 * np.exp(-tt * 30)) / SR) * np.exp(-tt * 18)
         slap = filt(rng.standard_normal(n), [600, 5000]) * np.exp(-tt * 45)
         return (thump * 0.7 + slap * 0.6) * 0.8
+    if kind == "alert_soft":  # quiet UI alert: two soft descending tones, no buzz
+        out = np.zeros(int(0.5 * SR))
+        for i, (m_, g) in enumerate(((76, 0.7), (71, 0.6))):
+            m = int(0.32 * SR); tt = t_(0.32)
+            tone = (np.sin(2 * np.pi * midi(m_) * tt) + 0.12 * np.sin(4 * np.pi * midi(m_) * tt)) * env(m, 0.004, 0.13)
+            s0 = int(i * 0.11 * SR); out[s0:s0 + m] += tone * g
+        return out * 0.4
     if kind == "riser":  # short smooth rising whoosh (calendars aligning)
         n = int(0.55 * SR); tt = np.arange(n) / SR
         z = sweep(rng.standard_normal(n), 400, 7000) * (tt / tt[-1]) ** 1.6 * np.minimum(1, (tt[-1] - tt) / 0.04)
@@ -362,7 +372,8 @@ def limiter(st, ceiling_db):
 
 
 def main():
-    mus = build_music_long20() if cues.get("music") == "long20" else build_music()
+    m = cues.get("music")
+    mus = build_music_long(LONG20) if m == "long20" else build_music_long(m) if isinstance(m, dict) else build_music()
     fx, vo = build_sfx(), build_vo()
     sf.write(f"{OUT}/music.wav", (mus / np.abs(mus).max() * 0.9).astype(np.float32), SR)
     sf.write(f"{OUT}/sfx.wav", (fx / np.abs(fx).max() * 0.9).astype(np.float32), SR)
