@@ -170,6 +170,109 @@ def build_music():
     return mus
 
 
+def build_music_long20():
+    """20 s bed (120 BPM, 40 beats). Problem in A minor (0-5 s) with a drop-out on the freeze, a rise
+    into the solution, a C-G-Am-F groove under the product beats, a lift into the end card and a
+    resolving C add9 sting on beat 33 (16.5 s)."""
+    t_ = lambda d: np.arange(int(d * SR)) / SR
+    mus = np.zeros((N, 2))
+    FREEZE, SOLVE, LIFT0, END = 3.5, 5.0, 15.4, 16.5
+    def chord_l(t):
+        if t < SOLVE:  # problem: Am | F (two beats each bar half)
+            return (45, [57, 60, 64, 67]) if (t // 2) % 2 == 0 else (41, [57, 60, 65, 69])
+        prog = [(48, [60, 64, 67, 71]), (43, [59, 62, 67, 71]), (45, [57, 60, 64, 67]), (41, [57, 60, 65, 69])]
+        return prog[int((t - SOLVE) // 2) % 4]
+    n = int(0.35 * SR); tt = np.arange(n) / SR
+    kick = np.tanh(np.sin(2 * np.pi * np.cumsum(50 + 100 * np.exp(-tt * 30)) / SR) * np.exp(-tt * 9) * 1.5)
+    hat = filt(rng.standard_normal(int(0.05 * SR)), 8500, "high") * env(int(0.05 * SR), 0.001, 0.02)
+    shk = filt(rng.standard_normal(int(0.04 * SR)), [5000, 12000]) * env(int(0.04 * SR), 0.004, 0.015)
+    cn = int(0.25 * SR)
+    clap = filt(rng.standard_normal(cn), [1000, 6000]) * env(cn, 0.002, 0.09)
+    drums_on = lambda b: (b < FREEZE) or (SOLVE - 1e-6 <= b < LIFT0)
+    kicks = []
+    b = 0.0
+    while b < END - 1e-6:
+        if drums_on(b):
+            place(mus, kick, b, 0.75 if b < SOLVE else 0.85); kicks.append(b)
+            if int(round(b / BEAT)) % 2 == 1 and b >= SOLVE:
+                place(mus, clap, b, 0.28)
+            place(mus, hat, b + BEAT / 2, 0.2, 0.25)
+            if b >= 8.7:  # a little more motion under the product demo
+                for q in (0.25, 0.75):
+                    place(mus, shk, b + q * BEAT, 0.12, -0.3)
+        b += BEAT
+    # light pulse continues under the end card (hats only), so it never goes dead
+    b = END + BEAT
+    while b < DUR - 0.6:
+        place(mus, hat, b + BEAT / 2, 0.12, 0.2); b += BEAT
+    sc = np.ones(N)
+    for k in kicks:
+        i = int(k * SR); m = int(0.22 * SR)
+        sc[i:i + m] = np.minimum(sc[i:i + m], 1 - 0.5 * np.exp(-np.arange(m) / SR * 16)[: len(sc[i:i + m])])
+    # bass 8ths (rests through the freeze and the lift)
+    bass = np.zeros(N)
+    t0 = 0.0
+    while t0 < END - 1e-6:
+        if drums_on(t0):
+            root, _ = chord_l(t0)
+            m = int(BEAT / 2 * SR); tt = np.arange(m) / SR
+            f = midi(root - 12)
+            note = (np.sin(2 * np.pi * f * tt) * 0.8 + saw(f, tt) * 0.3) * env(m, 0.004, 0.2, 3)
+            i = int(t0 * SR); bass[i:i + m] += note[: N - i]
+        t0 += BEAT / 2
+    bass = filt(bass, 700) * sc
+    mus += np.stack([bass, bass], 1) * 0.38
+    # pluck arp from the solution on; brighter from the status beat
+    t0, idx = SOLVE, 0
+    while t0 < LIFT0 - 1e-6:
+        _, tones = chord_l(t0)
+        m_ = tones[[0, 2, 1, 3, 2, 1, 3, 2][idx % 8]] + 12
+        m = int(0.2 * SR); tt = np.arange(m) / SR
+        pl = filt(saw(midi(m_), tt) * 0.6 + np.sin(2 * np.pi * midi(m_) * tt), 2600 if t0 < 8.7 else 3600) * env(m, 0.002, 0.09, 5)
+        place(mus, pl, t0, 0.07, 0.35 if idx % 2 else -0.35)
+        t0 += BEAT / 2; idx += 1
+    # pad: continuous, swells through the freeze (the "stillness"), dips for the lift
+    pad = np.zeros((N, 2))
+    seg = 0.0
+    while seg < END - 1e-6:
+        s1 = min(END, seg + (2.0 if seg < SOLVE else 2.0))
+        tt = t_(s1 - seg); _, tones = chord_l(seg)
+        v = np.zeros((len(tt), 2))
+        for j, m_ in enumerate(tones):
+            for kk, d in enumerate((-0.005, 0.006)):
+                v[:, (j + kk) % 2] += saw(midi(m_), tt + 0.01 * kk, d)
+        v *= (np.minimum(1, tt / 0.03) * np.minimum(1, (s1 - seg - tt) / 0.03))[:, None]
+        i = int(seg * SR); pad[i:i + len(tt)] += v[: N - i]
+        seg = s1
+    pad = np.stack([filt(pad[:, c], 1500) for c in range(2)], 1)
+    tl = np.arange(N) / SR
+    padg = 0.028 + 0.02 * np.clip((tl - FREEZE) / 0.3, 0, 1) * np.clip((SOLVE - tl) / 0.2, 0, 1)
+    mus += pad * (sc * padg)[:, None]
+    # rising sweep into the solution, and the lift into the end card
+    for a0, a1, g in ((4.15, SOLVE, 0.9), (LIFT0, END, 1.0)):
+        d = a1 - a0; tt = t_(d)
+        f = midi(55) * 2 ** (tt / d)
+        lift = sweep(saw(1, np.cumsum(f) / SR) * 0.5, 400, 6000) * (tt / d) ** 2
+        nz = sweep(rng.standard_normal(len(tt)), 600, 9000) * (tt / d) ** 2.5
+        place(mus, (lift * 0.08 + nz * 0.06) * g, a0)
+    # downbeat accent on the solution
+    tt = t_(0.6)
+    place(mus, np.tanh(np.sin(2 * np.pi * np.cumsum(45 + 80 * np.exp(-tt * 20)) / SR) * np.exp(-tt * 8) * 1.4) * 0.3, SOLVE)
+    # end-card sting: C add9 + bell, decaying under the CTA, with a soft held pad
+    tt = t_(DUR - END)
+    st = np.zeros(len(tt))
+    for m_, g in ((36, 0.9), (48, 0.6), (60, 0.5), (64, 0.4), (67, 0.4), (74, 0.3)):
+        st += (np.sin(2 * np.pi * midi(m_) * tt) * g + saw(midi(m_), tt, 0.003) * g * 0.12)
+    st = filt(st, 3000) * (np.exp(-tt * 0.9) * 0.8 + 0.2) * np.minimum(1, tt / 0.01)
+    bell = sum(np.sin(2 * np.pi * midi(m_) * tt) * g for m_, g in ((84, 0.5), (88, 0.35), (91, 0.25))) * np.exp(-tt * 3.0)
+    hit = np.tanh(np.sin(2 * np.pi * np.cumsum(45 + 80 * np.exp(-tt * 20)) / SR) * np.exp(-tt * 8) * 1.4)
+    place(mus, st * 0.13 + bell * 0.07 + hit * 0.4, END)
+    mus = reverb(mus, 0.14)
+    fade = int(0.6 * SR)
+    mus[-fade:] *= np.linspace(1, 0, fade)[:, None] ** 1.5
+    return mus
+
+
 def sfx(kind):
     if kind == "click":  # soft, precise UI click
         m = int(0.035 * SR)
@@ -192,6 +295,14 @@ def sfx(kind):
         thump = np.sin(2 * np.pi * np.cumsum(70 + 60 * np.exp(-tt * 30)) / SR) * np.exp(-tt * 18)
         slap = filt(rng.standard_normal(n), [600, 5000]) * np.exp(-tt * 45)
         return (thump * 0.7 + slap * 0.6) * 0.8
+    if kind == "riser":  # short smooth rising whoosh (calendars aligning)
+        n = int(0.55 * SR); tt = np.arange(n) / SR
+        z = sweep(rng.standard_normal(n), 400, 7000) * (tt / tt[-1]) ** 1.6 * np.minimum(1, (tt[-1] - tt) / 0.04)
+        return z * 0.55
+    if kind == "snap":  # soft snap into place
+        n = int(0.09 * SR)
+        return (filt(rng.standard_normal(n), [1800, 7000]) * env(n, 0.0005, 0.012) * 0.8
+                + np.sin(2 * np.pi * 1200 * t_(0.09)) * env(n, 0.0008, 0.025) * 0.45)
     if kind == "whoosh_soft":
         z = sweep(rng.standard_normal(int(0.32 * SR)), 400, 3500)
         return z * np.sin(np.linspace(0, np.pi, len(z))) ** 2 * 0.35
@@ -251,7 +362,8 @@ def limiter(st, ceiling_db):
 
 
 def main():
-    mus, fx, vo = build_music(), build_sfx(), build_vo()
+    mus = build_music_long20() if cues.get("music") == "long20" else build_music()
+    fx, vo = build_sfx(), build_vo()
     sf.write(f"{OUT}/music.wav", (mus / np.abs(mus).max() * 0.9).astype(np.float32), SR)
     sf.write(f"{OUT}/sfx.wav", (fx / np.abs(fx).max() * 0.9).astype(np.float32), SR)
     meter = pyln.Meter(SR, block_size=0.4)

@@ -1,9 +1,10 @@
-# RecurPost — 6 s YouTube bumpers (16:9)
+# RecurPost — YouTube bumpers (6 s) and in-stream (20 s), 16:9
 
 | # | Spot | Deliverable | Alternate (logo and CTA side by side) |
 |---|---|---|---|
 | 1 | `batch`: "Batch schedule" | `out/RecurPost_Bumper_6s_16x9.mp4` | `out/RecurPost_Bumper_6s_16x9_alt_side-lockup.mp4` |
 | 2 | `where`: "Where's the post?" | `out/RecurPost_Bumper2_WheresThePost_6s_16x9.mp4` | `out/RecurPost_Bumper2_WheresThePost_6s_16x9_alt_side-lockup.mp4` |
+| 4 | `unified`: 20 s skippable in-stream, "One calendar view" | `out/RecurPost_InStream_OneCalendarView_20s_16x9.mp4` | — (own end card) |
 | 3 | `reports`: "Month-end reports" | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9.mp4` | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9_alt_side-lockup.mp4`; agency-cover variant: `..._alt_agency-cover.mp4` (`COVER=agency`) |
 
 All files are 1920×1080, 30 fps, H.264 High, AAC 48 kHz stereo, exactly 6.000 s, mastered to about −14 LUFS with true peak ≤ −1.9 dBFS.
@@ -62,6 +63,29 @@ Trade-off: the first VO line (~2.2 s) runs about 0.7 s past Scene 1 into the pau
 
 - **Charts:** the bars deliberately show no upward trend, and the line wanders, so nothing reads as a results or time-savings claim.
 - **`COVER=agency` variant:** replaces the RecurPost logo on the report cover with an abstract, letter-free "your agency" mark. The brief asked for the RecurPost logo on the cover, but the core message is reports presented under the *agency's* brand. A RecurPost logo on the client report can read as "reports branded RecurPost", which is the opposite of what is being sold. The default cut follows the brief; the variant is there to compare.
+
+## 20 s in-stream — "One calendar view" (`unified`)
+One continuous story built around one post card, the "hero" with a yellow outline. Each scene hands its objects to the next: the four client windows pan into an overlapping stack, then line up as the rows of one calendar. The hero lands in its slot, gets moved from Thursday to Friday, and the whole calendar shrinks into the end-card panel.
+
+| Time | Visual | Copy | VO |
+|---|---|---|---|
+| 0.0–2.0 | Dark-to-light open on the hero card, then four client calendars split the screen, each drifting at its own pace. The card slips behind Client 2 and reappears on Client 4, then the calendars pan past the camera. | MULTIPLE CLIENTS. / **MULTIPLE CALENDARS.** · Client 1–4 | 0.05–2.04 |
+| 2.0–4.7 | The calendars overlap. A client message pops in next to the hero (notification sound). A cursor clicks through three windows, bringing each to the front, and at 3.52 s everything freezes. | **WHERE’S THE FULL SCHEDULE?** · "Is Thursday’s post ready?" | 2.20–4.81 |
+| 4.7–8.7 | Rising whoosh: each window becomes its client's row in one calendar. Client labels slide to the sidebar, cards slot into day columns, and the logo reveals subtly in the calendar bar. The hero lands at 6.3 s, then a slow push-in. | CLIENT POSTS. / **ONE CALENDAR VIEW.** | 5.00–8.75 |
+| 8.7–13.0 | Camera moves in and pans left to right while status badges switch on. Tags pop on the spoken word: Scheduled 9.28, Published 10.08, Draft 10.60, Failed 11.35 (light confirmation each). Each tag is large, then settles small on its card. | **SEE POST STATUS AT A GLANCE** · Scheduled · Published · Draft · Failed | 8.90–12.01 |
+| 13.0–15.4 | A cursor drags the hero from Thursday to Friday onto a dashed drop target, with a soft snap at 14.3 s. The rest of the calendar stays put. | MOVE POSTS. / **KEEP THE PLAN IN VIEW.** | 13.05–14.74 |
+| 15.4–20.0 | The calendar scales into the end-card panel. Logo, line and CTA build in; static from about 17.2 s. Sting on beat 33 (16.5 s). | BRING YOUR CLIENT / SCHEDULES INTO VIEW. · START YOUR RECURPOST TRIAL | 15.30–18.10 · pause · 18.40–19.62 |
+
+- **Timing trade-offs:**
+  - **Line 3 (5.00–8.75 s):** at a natural pace it runs about 0.75 s past the brief's 8.0 s mark. That beat ends at 8.7 s, and the status beat is about 4.3 s instead of 5 s.
+  - **Line 6 (15.30–18.10 s):** starts during the calendar-to-end-card transition, so the brief pause before "Start your trial today" fits inside 20 s.
+- **Safe areas:**
+  - "Client N" labels fade out before they leave title-safe during camera moves.
+  - The in-calendar logo shows only while the whole calendar is in frame, so it is never cropped.
+  - Status tags are clamped inside title-safe.
+- **Audio:**
+  - **Music:** an original 20 s bed (`music: 'long20'`): A-minor problem section, drums drop out on the freeze, a rise into a C–G–Am–F groove, a lift into the end card, then a resolving sting.
+  - **Effects:** clicks, a notification, a whoosh, a riser, four light confirmations and a snap.
 
 ## Brand and compliance (all spots)
 - **Logo:** `assets/brand/logo_dark_text.png` matches the supplied file to within WebP→PNG rounding (≤0.5%, alpha identical). It is drawn at its native 2000:245 ratio with no recolor, crop, shadow or effect. Only position and opacity animate on entry.

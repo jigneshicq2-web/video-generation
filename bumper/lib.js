@@ -206,6 +206,7 @@ function endCard(ctx, t, T) {
 // ---------- frame ----------
 // Yellow wipe with slanted edges: main scene left of `lead`, end card right of `trail`.
 function renderAt(ctx, t, spot) {
+  if (spot.renderAt) return spot.renderAt(ctx, t); // spots with their own ending (e.g. the 20 s cut)
   const [w0, w1] = spot.TL.T.wipe;
   if (t < w0) return spot.mainScene(ctx, t);
   const span = W + 320;
