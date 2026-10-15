@@ -62,7 +62,7 @@ function postCard(ctx, x, y, w, h, o) {
   ctx.fillStyle = CLIENTS[o.client].col; ctx.fillRect(0, 0, Math.max(4, h * 0.06), h);
   const pad = h * 0.13, th = h - pad * 2;
   ctx.globalAlpha *= draft ? 1 - 0.4 * o.statusA : 1;
-  thumb(ctx, pad + h * 0.05, pad, th, th, h * 0.08, VAR[o.variant % VAR.length]);
+  thumb(ctx, pad + h * 0.05, pad, th, th, h * 0.08, (o.vObj || VAR[o.variant % VAR.length]));
   const bx = pad + h * 0.05 + th + h * 0.12, bw = w - bx - pad;
   fillRR(ctx, bx, pad + h * 0.04, bw * 0.95, h * 0.09, h * 0.045, C.gray);
   fillRR(ctx, bx, pad + h * 0.2, bw * 0.62, h * 0.09, h * 0.045, C.line);

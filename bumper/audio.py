@@ -253,7 +253,8 @@ def build_music_long(P=LONG20):
     padg = 0.028 + 0.02 * np.clip((tl - FREEZE) / 0.3, 0, 1) * np.clip((SOLVE - tl) / 0.2, 0, 1)
     mus += pad * (sc * padg)[:, None]
     # rising sweep into the solution, and the lift into the end card
-    for a0, a1, g in ((P["riser"], SOLVE, 0.9), (LIFT0, END, 1.0)):
+    rises = ((P["riser"], SOLVE, 0.9),) if P.get("riser") is not None else ()
+    for a0, a1, g in rises + ((LIFT0, END, 1.0),):
         d = a1 - a0; tt = t_(d)
         f = midi(55) * 2 ** (tt / d)
         lift = sweep(saw(1, np.cumsum(f) / SR) * 0.5, 400, 6000) * (tt / d) ** 2
@@ -299,6 +300,11 @@ def sfx(kind):
         thump = np.sin(2 * np.pi * np.cumsum(70 + 60 * np.exp(-tt * 30)) / SR) * np.exp(-tt * 18)
         slap = filt(rng.standard_normal(n), [600, 5000]) * np.exp(-tt * 45)
         return (thump * 0.7 + slap * 0.6) * 0.8
+    if kind == "pop":  # light, bright pop for a message/comment appearing
+        n = int(0.12 * SR); tt = np.arange(n) / SR
+        f = 700 + 900 * np.exp(-tt * 40)
+        return (np.sin(2 * np.pi * np.cumsum(f) / SR) * env(n, 0.001, 0.05) * 0.6
+                + np.sin(2 * np.pi * 1760 * tt) * env(n, 0.001, 0.03) * 0.15)
     if kind == "alert_soft":  # quiet UI alert: two soft descending tones, no buzz
         out = np.zeros(int(0.5 * SR))
         for i, (m_, g) in enumerate(((76, 0.7), (71, 0.6))):

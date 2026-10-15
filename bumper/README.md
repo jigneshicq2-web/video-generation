@@ -7,6 +7,7 @@
 | 4 | `unified`: 20 s skippable in-stream, "One calendar view" | `out/RecurPost_InStream_OneCalendarView_20s_16x9.mp4` | — (own end card) |
 | 5 | `failed`: 25 s skippable in-stream, "A post fails" | `out/RecurPost_InStream_FailedPost_25s_16x9.mp4` | — (own end card) |
 | 6 | `approve`: 15 s non-skippable in-stream, "Which version did the client approve?" | `out/RecurPost_InStream_WhichVersionApproved_15s_16x9.mp4` | — (own end card) |
+| 7 | `share`: 25 s skippable in-stream, "Share the calendar, keep your login" | `out/RecurPost_InStream_ShareCalendar_25s_16x9.mp4` | — (own end card) |
 | 3 | `reports`: "Month-end reports" | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9.mp4` | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9_alt_side-lockup.mp4`; agency-cover variant: `..._alt_agency-cover.mp4` (`COVER=agency`) |
 
 All files are 1920×1080, 30 fps, H.264 High, AAC 48 kHz stereo, exactly 6.000 s, mastered to about −14 LUFS with true peak ≤ −1.9 dBFS.
@@ -122,6 +123,23 @@ One client post card carries the story. Its newest version ("Updated version", y
 
 - **Script density:** the exact script is about 13 s of speech, so it is read at 1.2× and the beats follow the voice: workflow 5.95–9.6 s, payoff 9.6–11.5 s, end card from 11.5 s. The last word ends 0.12 s before the cut. This leaves no room for a pause before the CTA.
 - **Music:** the same engine as the other long-form spots, with these parameters: drum pause on the question (1.62–2.5 s), a short drop and rise into the workflow, a warmer groove from 6.0 s, and a sting at 11.5 s (beat 23).
+
+## 25 s in-stream — "Your client shouldn't need your scheduler login" (`share`)
+One calendar and one post card (sky-blue artwork, yellow outline) carry the story. The same grid and card positions stay in place while the calendar changes role: agency workspace → shareable preview → client-facing "Shared calendar" → agency workspace again → the card becomes the CTA. The palette is brand yellow and charcoal with sky and coral as bright complementary accents; the client is coral.
+
+| Time | Visual | Copy | VO (1.1×) |
+|---|---|---|---|
+| 0.0–4.0 | Bright downbeat; calendar cards pop in on the 8th-note grid. The client message pops in. A generic login panel (lock + blank fields, no credentials) appears; the cursor approaches, pauses (soft click) and pulls back. | **CLIENT WANTS TO REVIEW THE PLAN?** · "Can I review next week’s posts?" | 0.15–2.37 |
+| 4.0–8.0 | The post card lifts (whoosh) and becomes a shareable preview on the client side; the agency workspace shrinks to the left. A share chip travels to the client. The lock between them closes (click) and then settles onto the agency side, so the login stays with the agency. The camera glides into the shared calendar. | SHARE THE CALENDAR. / **KEEP YOUR LOGIN PRIVATE.** | 4.05–6.45 |
+| 8.0–14.0 | Client-facing view: logo, **Shared calendar** label, the client's avatar and no editing controls. The client's cursor clicks the post (click), and a comment note attaches to it (pop) with a gentle highlight. | **SHARE FOR REVIEW AND COMMENTS** · Shared calendar | 8.10–11.87 |
+| 14.0–19.0 | The same calendar becomes the agency workspace (team list, toolbar). The camera pushes in. The team sees the comment (click), lifts the card, and updates its artwork from sky to coral (pencil badge, click). The card returns to its slot (snap) and the note is marked reviewed. Nothing auto-publishes. | CLIENT FEEDBACK. / **YOUR WORKFLOW.** | 14.10–17.43 |
+| 19.0–21.7 | Pull back to the organized calendar; a yellow ripple and bright yellow/sky/coral shapes burst from the card (confirmation tone). | **A CLEARER WAY TO REVIEW THE PLAN** | 19.15–20.48 |
+| 21.7–25.0 | Cards sweep outward; the post card becomes the CTA pill, then the logo builds. Static from about 22.9 s; sting at 22.0 s. | Logo · START YOUR RECURPOST TRIAL | 21.20–23.29 · 23.55–24.73 |
+
+- **Accuracy:** the client only views and comments. The shared view has no editing controls and the client never sees the agency workspace. No credentials are ever shown.
+- **Close timing:** "Share client calendars with RecurPost" starts at 21.2 s, during the payoff, so "Start your trial today" keeps a real pause and ends 0.27 s before the cut.
+- **Music:** the same engine with no problem section (major from the first frame), opening up at 8.0 s when the shared calendar arrives. The engine gained an optional riser and a "pop" effect; the earlier spots' mixes are verified unchanged.
+- **Motion:** every hold has a drift or float, so the end card is the only static stretch.
 
 ## Brand and compliance (all spots)
 - **Logo:** `assets/brand/logo_dark_text.png` matches the supplied file to within WebP→PNG rounding (≤0.5%, alpha identical). It is drawn at its native 2000:245 ratio with no recolor, crop, shadow or effect. Only position and opacity animate on entry.
