@@ -6,7 +6,9 @@ const path = require('path');
 const { spawn } = require('child_process');
 const { createCanvas, loadImage, GlobalFonts } = require('@napi-rs/canvas');
 
-const W = 1920, H = 1080, FPS = 30;
+// Canvas size: 1920x1080 unless the spot ships a format.json (render.js sets BUMPER_SIZE, e.g. 1080x1920).
+const [W, H] = (process.env.BUMPER_SIZE || '1920x1080').split('x').map(Number);
+const FPS = 30;
 const ROOT = path.join(__dirname, '..');
 const END_LAYOUT = process.env.END_LAYOUT || 'stacked';
 
@@ -252,7 +254,7 @@ async function run(spotName, mode = 'video', arg) {
     const step = parseFloat(arg || '0.25');
     const times = [];
     for (let t = 0; t < spot.TL.DURATION - 1e-6; t += step) times.push(t);
-    const cols = 6, tw = 480, th = 270, rows = Math.ceil(times.length / cols);
+    const cols = 6, tw = W >= H ? 480 : 240, th = Math.round(tw * H / W), rows = Math.ceil(times.length / cols);
     const sheet = createCanvas(cols * tw, rows * (th + 34));
     const sc = sheet.getContext('2d');
     sc.fillStyle = '#111'; sc.fillRect(0, 0, sheet.width, sheet.height);

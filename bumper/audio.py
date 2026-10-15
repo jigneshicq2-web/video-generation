@@ -254,15 +254,28 @@ def build_music_long(P=LONG20):
     mus += pad * (sc * padg)[:, None]
     # rising sweep into the solution, and the lift into the end card
     rises = ((P["riser"], SOLVE, 0.9),) if P.get("riser") is not None else ()
+    if P.get("boost"):  # optional mid-spot lift: a rise into a brighter layer (bell arp + open hats)
+        b0, b1 = P["boost"]
+        rises += ((b0, b1, 0.75),)
+        t0, idx = b1, 0
+        while t0 < LIFT0 - 1e-6:
+            _, tones = chord_l(t0)
+            m_ = tones[[0, 2, 3, 2][idx % 4]] + 24
+            tt = t_(0.35)
+            bl = (np.sin(2 * np.pi * midi(m_) * tt) + 0.2 * np.sin(4 * np.pi * midi(m_) * tt)) * env(len(tt), 0.002, 0.16)
+            place(mus, bl, t0, 0.045, 0.4 if idx % 2 else -0.4)
+            place(mus, filt(rng.standard_normal(int(0.16 * SR)), 7000, "high") * env(int(0.16 * SR), 0.002, 0.07), t0 + BEAT / 2, 0.13, 0.2)
+            t0 += BEAT; idx += 1
     for a0, a1, g in rises + ((LIFT0, END, 1.0),):
         d = a1 - a0; tt = t_(d)
         f = midi(55) * 2 ** (tt / d)
         lift = sweep(saw(1, np.cumsum(f) / SR) * 0.5, 400, 6000) * (tt / d) ** 2
         nz = sweep(rng.standard_normal(len(tt)), 600, 9000) * (tt / d) ** 2.5
         place(mus, (lift * 0.08 + nz * 0.06) * g, a0)
-    # downbeat accent on the solution
+    # downbeat accent on the solution (and on the boost, if any)
     tt = t_(0.6)
-    place(mus, np.tanh(np.sin(2 * np.pi * np.cumsum(45 + 80 * np.exp(-tt * 20)) / SR) * np.exp(-tt * 8) * 1.4) * 0.3, SOLVE)
+    for at in (SOLVE,) + ((P["boost"][1],) if P.get("boost") else ()):
+        place(mus, np.tanh(np.sin(2 * np.pi * np.cumsum(45 + 80 * np.exp(-tt * 20)) / SR) * np.exp(-tt * 8) * 1.4) * 0.3, at)
     # end-card sting: C add9 + bell, decaying under the CTA, with a soft held pad
     tt = t_(DUR - END)
     st = np.zeros(len(tt))
@@ -300,6 +313,11 @@ def sfx(kind):
         thump = np.sin(2 * np.pi * np.cumsum(70 + 60 * np.exp(-tt * 30)) / SR) * np.exp(-tt * 18)
         slap = filt(rng.standard_normal(n), [600, 5000]) * np.exp(-tt * 45)
         return (thump * 0.7 + slap * 0.6) * 0.8
+    if kind == "stamp":  # crisp rubber-stamp hit: low thud + short papery snap
+        n = int(0.35 * SR); tt = np.arange(n) / SR
+        thud = np.sin(2 * np.pi * np.cumsum(90 + 120 * np.exp(-tt * 40)) / SR) * np.exp(-tt * 22)
+        snap = filt(rng.standard_normal(n), [1200, 8000]) * np.exp(-tt * 70)
+        return np.tanh((thud * 0.9 + snap * 0.7) * 1.2) * 0.8
     if kind == "pop":  # light, bright pop for a message/comment appearing
         n = int(0.12 * SR); tt = np.arange(n) / SR
         f = 700 + 900 * np.exp(-tt * 40)

@@ -148,3 +148,33 @@ One calendar and one post card (sky-blue artwork, yellow outline) carry the stor
 - **Safe area:** critical copy and the logo sit inside 10% title-safe (x 192–1728).
 - **Audio:** synthesized in code with no stock or library material, so it is cleared for commercial use.
 - **Not verified by a human listener:** the TTS voice and the mix. Review them on headphones before trafficking.
+
+## Video 8 — 30 s YouTube Shorts, 9:16 (1080×1920): "The pitch is done. Now turn it into a month of content."
+
+`out/RecurPost_Shorts_PlanToPublishing_30s_9x16.mp4` (+ contact sheet, final frame). Source: `bumper/spots/plan/`.
+The spot's `format.json` sets the 1080×1920 canvas. `render.js` reads it before loading `lib.js`. Spots without one stay 1920×1080, and those renders are pixel-identical.
+
+| Time | Visual | On-screen text | VO |
+|---|---|---|---|
+| 0–4 s | The proposal slides up on the first beat. A green APPROVED stamp drops and bounces, with confetti. The paper unfolds (two flaps) into a blank calendar, and the stamp shrinks into a check badge | THE PITCH IS APPROVED. | The client said yes. Now comes the content calendar. |
+| 4–8 s | The calendar slowly grows. Idea notes pop on the 8ths. A cursor drags three into dates while the rest overlap slightly. The notes sweep into a stack, and the calendar folds into the compact campaign card | STRATEGY → CONTENT PLAN (arrow drawn as a vector) | But turning a strategy into a month of posts takes a plan. |
+| 8–14 s | Editable template cards appear: "Social Media Content Calendar", "Campaign Proposal" and "Social Media Plan". The campaign card slides past the last two, picks up a section from each, then docks in the calendar template and fills it | START WITH AN EDITABLE TEMPLATE | RecurPost offers editable planning templates to help shape the work. |
+| 14–20 s | The template opens into the month. Post cards land in dates on the 8ths, with legend pills Post / Reel / Campaign. The camera moves into the campaign post | PLAN. / ORGANIZE. / PREPARE. (each word lands with the VO; the yellow band follows) | Shape the calendar, organize campaign content, and prepare posts for scheduling. |
+| 20–25 s | The scheduling queue (logo in its header). The cursor drags the campaign post into slot 1, and three more follow. A yellow sweep plays with the confirmation tone | READY FOR SCHEDULING | Then move your content into RecurPost’s scheduling workflow. |
+| 25–30 s | The queue cards fan out to the margins and the campaign post becomes the CTA. The logo lands at its native ratio, and the end card is static from about 26.2 s | FROM PLAN TO PUBLISHING WORKFLOW · START YOUR RECURPOST TRIAL | Take the plan into RecurPost. Start your trial today. |
+
+- **Continuity:** a yellow outline and a violet campaign flag follow the hero through proposal → calendar → campaign card → template → campaign post → CTA.
+- **Accuracy:**
+  - The cursor (the agency) places notes and drags the post into the queue. Nothing is generated or published automatically.
+  - The queue shows "ready for scheduling", not "published".
+  - There are no metrics, names, prices or URLs.
+  - The template names come from the brief. Check them against the live product.
+- **Brief conflict:** the brief says "16:9" once and "9:16, 1080×1920" twice. I built it as vertical 9:16.
+- **Safe area:** all content sits within x 90–990 and y 230–1460, clear of the Shorts top bar, the right-hand action column and the caption area.
+- **Audio:**
+  - Kokoro af_heart at 1.05×; every line ends inside its scene window.
+  - The music bed is bright from frame 0. Shakers build from 4 s, and a rise into a brighter layer (bell arp and open hats) comes at 20 s. A one-bar drum break leads into the sting at 25 s.
+  - New SFX: `stamp`. New music option: `boost`. The other spots' mixes are bit-identical.
+- **QA:** 30.000 s, 900 frames, −14.2 LUFS, true peak −1.6 dBFS, no black frames. The only still stretch is the end card.
+
+Build: `python3 bumper/vo.py plan && python3 bumper/audio.py plan && node bumper/render.js plan video`, then mux with `-t 30`.
