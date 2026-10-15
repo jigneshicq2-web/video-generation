@@ -191,7 +191,8 @@ def build_music_long(P=LONG20):
     shk = filt(rng.standard_normal(int(0.04 * SR)), [5000, 12000]) * env(int(0.04 * SR), 0.004, 0.015)
     cn = int(0.25 * SR)
     clap = filt(rng.standard_normal(cn), [1000, 6000]) * env(cn, 0.002, 0.09)
-    drums_on = lambda b: (b < FREEZE) or (SOLVE - 1e-6 <= b < LIFT0)
+    pz = P.get("pause")  # optional short drum pause (e.g. on a question), off by default
+    drums_on = lambda b: ((b < FREEZE) or (SOLVE - 1e-6 <= b < LIFT0)) and not (pz and pz[0] - 1e-6 <= b < pz[1])
     kicks = []
     b = 0.0
     while b < END - 1e-6:

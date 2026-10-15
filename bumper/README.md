@@ -1,4 +1,4 @@
-# RecurPost — YouTube bumpers (6 s) and in-stream (20 s, 25 s), 16:9
+# RecurPost — YouTube bumpers (6 s) and in-stream (15 s, 20 s, 25 s), 16:9
 
 | # | Spot | Deliverable | Alternate (logo and CTA side by side) |
 |---|---|---|---|
@@ -6,6 +6,7 @@
 | 2 | `where`: "Where's the post?" | `out/RecurPost_Bumper2_WheresThePost_6s_16x9.mp4` | `out/RecurPost_Bumper2_WheresThePost_6s_16x9_alt_side-lockup.mp4` |
 | 4 | `unified`: 20 s skippable in-stream, "One calendar view" | `out/RecurPost_InStream_OneCalendarView_20s_16x9.mp4` | — (own end card) |
 | 5 | `failed`: 25 s skippable in-stream, "A post fails" | `out/RecurPost_InStream_FailedPost_25s_16x9.mp4` | — (own end card) |
+| 6 | `approve`: 15 s non-skippable in-stream, "Which version did the client approve?" | `out/RecurPost_InStream_WhichVersionApproved_15s_16x9.mp4` | — (own end card) |
 | 3 | `reports`: "Month-end reports" | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9.mp4` | `out/RecurPost_Bumper3_MonthEndReports_6s_16x9_alt_side-lockup.mp4`; agency-cover variant: `..._alt_agency-cover.mp4` (`COVER=agency`) |
 
 All files are 1920×1080, 30 fps, H.264 High, AAC 48 kHz stereo, exactly 6.000 s, mastered to about −14 LUFS with true peak ≤ −1.9 dBFS.
@@ -107,6 +108,20 @@ One continuous story around one scheduled post card (dark artwork). It fails at 
   - **Failures:** red is used only for the failed post, with no alarm graphics.
 - **Pacing:** the VO uses 16.6 s of the 25 s at a natural 1.0× read (1.1× on the close), so every message and label has time to register. Each hold carries a slow camera push, so the only fully static stretch is the end card.
 - **Music:** the same engine as the 20 s spot, with these parameters: problem section until 7.0 s, a short drop and rise into the History reveal, a groove under the review/action beats, a lift from 20.4 s, and a sting at 21.0 s (beat 42).
+
+## 15 s non-skippable — "Which version did the client approve?" (`approve`)
+One client post card carries the story. Its newest version ("Updated version", yellow artwork) leaves the thread and searches three surfaces. Those surfaces align into one workspace, where the card goes Draft → In review → Approved. The approved card then takes its calendar slot and finally grows into the CTA pill.
+
+| Time | Visual | Copy | VO (1.2× except line 1) |
+|---|---|---|---|
+| 0.0–2.9 | Version 1, Version 2 and Updated version land in a message thread (soft clicks, quiet notifications). Two short bubbles overlap, then the question bubble lands and the music pauses. | **WHICH VERSION IS APPROVED?** · Version 1 · Version 2 · Updated version · "Which version is approved?" | 0.08–1.84 |
+| 2.9–5.95 | The thread slides away and the card hops across abstract calendar, email and chat surfaces, which then align into one workspace (whoosh, match cut on the card). | **FEEDBACK, SPREAD ACROSS THREADS.** | 2.90–5.82 |
+| 5.95–9.6 | Workspace with the logo in its bar and team + client avatars. Draft → In review → Approved; a client comment (abstract) appears beside the post. Approved lands at 8.35 s with a confirmation tone. It is a yellow review decision, not a publish state. | **A CLEARER CLIENT REVIEW WORKFLOW** · Draft · In review · Approved | 5.95–9.54 |
+| 9.6–11.5 | The approved card glides into the calendar and sits lifted and larger than the other clients' (dimmed) posts. | **REVIEW BEFORE PUBLISHING** | 9.65–11.54 |
+| 11.5–15.0 | The approved card grows into the CTA pill, then the logo builds above it. Static from about 12.5 s; sting at 11.5 s. | Logo · START YOUR RECURPOST TRIAL | 11.70–13.62 · 13.80–14.88 |
+
+- **Script density:** the exact script is about 13 s of speech, so it is read at 1.2× and the beats follow the voice: workflow 5.95–9.6 s, payoff 9.6–11.5 s, end card from 11.5 s. The last word ends 0.12 s before the cut. This leaves no room for a pause before the CTA.
+- **Music:** the same engine as the other long-form spots, with these parameters: drum pause on the question (1.62–2.5 s), a short drop and rise into the workflow, a warmer groove from 6.0 s, and a sting at 11.5 s (beat 23).
 
 ## Brand and compliance (all spots)
 - **Logo:** `assets/brand/logo_dark_text.png` matches the supplied file to within WebP→PNG rounding (≤0.5%, alpha identical). It is drawn at its native 2000:245 ratio with no recolor, crop, shadow or effect. Only position and opacity animate on entry.
