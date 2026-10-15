@@ -149,7 +149,7 @@ One calendar and one post card (sky-blue artwork, yellow outline) carry the stor
 - **Audio:** synthesized in code with no stock or library material, so it is cleared for commercial use.
 - **Not verified by a human listener:** the TTS voice and the mix. Review them on headphones before trafficking.
 
-## Video 8 — 30 s YouTube Shorts, 9:16 (1080×1920): "The pitch is done. Now turn it into a month of content."
+## Video 8 (first brief, superseded by Video 8 v2 below) — 30 s YouTube Shorts, 9:16 (1080×1920): "The pitch is done. Now turn it into a month of content."
 
 `out/RecurPost_Shorts_PlanToPublishing_30s_9x16.mp4` (+ contact sheet, final frame). Source: `bumper/spots/plan/`.
 The spot's `format.json` sets the 1080×1920 canvas. `render.js` reads it before loading `lib.js`. Spots without one stay 1920×1080, and those renders are pixel-identical.
@@ -178,3 +178,26 @@ The spot's `format.json` sets the 1080×1920 canvas. `render.js` reads it before
 - **QA:** 30.000 s, 900 frames, −14.2 LUFS, true peak −1.6 dBFS, no black frames. The only still stretch is the end card.
 
 Build: `python3 bumper/vo.py plan && python3 bumper/audio.py plan && node bumper/render.js plan video`, then mux with `-t 30`.
+
+## Video 8 v2 — 30 s YouTube Shorts, 9:16 (1080×1920): "The pitch is won. Now turn it into a month of content."
+
+Deliverable: `out/RecurPost_Shorts_ClientWon_30s_9x16.mp4`, plus a contact sheet and the final frame. Source: `bumper/spots/won/`. This replaces the first Video 8 cut (`plan`), which is kept for comparison.
+
+| Time | Visual | On-screen text | VO |
+|---|---|---|---|
+| 0–3.5 s | The proposal flies in. The APPROVED stamp lands on a musical accent with a small burst of brand-coloured shapes. The paper unfolds into a blank two-week calendar in the same screen position | CLIENT WON. | You won the client. Now comes the content plan. |
+| 3.5–7 s | The calendar opens into the month view. Idea cards arrive quickly and don't line up; a cursor tries to organise them. They stack neatly and the calendar folds into the campaign card | STRATEGY → CONTENT PLAN | Now turn the strategy into a month of posts. |
+| 7–12.5 s | Templates slide in on the beat as a linked sequence: Campaign Proposal → Social Media Plan → Content Calendar. The campaign card docks at each stage and picks up structure: proposal cover → plan sections → calendar grid | START WITH AN EDITABLE TEMPLATE | RecurPost has editable templates to help shape the plan. |
+| 12.5–18.5 s | "Content Calendar" opens into the month and the campaign card lands in its date slot. The other posts land on the 8ths under the Post / Reel / Campaign legend. The camera pans slowly across the calendar, then pushes into the campaign card | PLAN. ORGANIZE. PREPARE. | Organize campaign ideas and build the calendar. |
+| 18.5–24.5 s | The push reveals the scheduling queue (logo in its header). The cursor drags the campaign post in and three more follow. A yellow sweep plays with the confirmation tone | FROM PLAN TO SCHEDULING | Then bring the planned content into RecurPost’s scheduling workflow. |
+| 24.5–30 s | The queue cards sweep together in an arc. The campaign card becomes the CTA, then the logo and tagline land. Static from about 26 s | CARRY THE PLAN INTO YOUR WORKFLOW · START YOUR RECURPOST TRIAL | Take your plan into RecurPost. Start your trial today. |
+
+- **Accuracy:** the cursor (the agency) organises and moves content. The queue shows "ready", not "published". There are no metrics, names, prices or URLs. The template names come from the brief and still need checking against the live product.
+- **Audio:**
+  - Kokoro af_heart at 1.0×.
+  - New optional music `accent` hit, used for the stamp.
+  - A boost into the queue at 18.5 s, and a sting on the sweep at 24.5 s.
+  - The other spots' mixes are unchanged.
+- **QA:** 30.000 s, 900 frames, −14.4 LUFS, true peak −1.3 dBFS, no black frames. The only still stretch is the end card.
+
+Build: `python3 bumper/vo.py won && python3 bumper/audio.py won && node bumper/render.js won video`, then mux with `-t 30`.

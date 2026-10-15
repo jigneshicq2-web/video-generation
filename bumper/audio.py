@@ -274,7 +274,7 @@ def build_music_long(P=LONG20):
         place(mus, (lift * 0.08 + nz * 0.06) * g, a0)
     # downbeat accent on the solution (and on the boost, if any)
     tt = t_(0.6)
-    for at in (SOLVE,) + ((P["boost"][1],) if P.get("boost") else ()):
+    for at in (SOLVE,) + ((P["boost"][1],) if P.get("boost") else ()) + tuple(P.get("accent", ())):
         place(mus, np.tanh(np.sin(2 * np.pi * np.cumsum(45 + 80 * np.exp(-tt * 20)) / SR) * np.exp(-tt * 8) * 1.4) * 0.3, at)
     # end-card sting: C add9 + bell, decaying under the CTA, with a soft held pad
     tt = t_(DUR - END)
